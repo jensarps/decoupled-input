@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decoupled Input -- First Person Style Example</title>
+    <meta charset="utf-8">
+    <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+            }
+            #info {
+                text-align: center;
+                position: absolute;
+                width: 100%;
+                font-family: monospace;
+            }
+            button {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            #vis {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                font-size: 20px;
+            }
+            #vis.hidden {
+                display: none;
+            }
+            #fwd {
+                position: absolute;
+                top: 0;
+                left: 30px;
+            }
+            #right {
+                position: absolute;
+                top: 13px;
+                left: 40px;
+            }
+            #back {
+                position: absolute;
+                top: 27px;
+                left: 30px;
+            }
+            #left {
+                position: absolute;
+                top: 14px;
+                left: 13px;
+            }
+            #turn {
+                position: absolute;
+                top: 50px;
+                left: -17px;
+                margin: 20px 0;
+                border: solid 1px gray;
+                width: 100px;
+                height: 20px;
+                padding-bottom: 3px;
+            }
+            #turn span {
+                position: absolute;
+                top: 0;
+                left: 50%;
+            }
+            .input-active {
+                color: lime;
+            }
+        </style>
+    <script src="Three.js"></script>
+    <script src="require.js"></script>
+    <script src="game-shim.js"></script>
+</head>
+<body>
+    <div id="info">
+        Decoupled Input -- First Person Style Example<br>
+        move: WASD | turn: mouse | toggle vis: T
+    </div>
+    <div id="vis">
+        <div id="fwd">⇑</div>
+        <div id="right">⇒</div>
+        <div id="back">⇓</div>
+        <div id="left">⇐</div>
+        <div id="turn"><span>|</span></div>
+    </div>
+    <button onclick="document.documentElement.requestFullScreen();GameShim.supports.pointerLock && document.documentElement.requestPointerLock();">Fullscreen</button>
+    <script type="text/javascript">
+
+        // require controller files...
+        require([
+            // the controller itself:
+            '../src/Controller',
+            // the device handlers:
+            '../src/Mouse',
+            '../src/Keyboard',
+            // and the bindings file:
+            'bindings-fps'
+        ], function(
+            InputController,
+            MouseHandler,
+            Keyboardhandler,
+            bindings
+        ){
+
+            var camera, scene, renderer;
+            var SCREEN_HEIGHT = window.innerHeight;
+            var SCREEN_WIDTH = window.innerWidth;
+
+            var input; // this is where we will put input data into.
+
+            var visualisationNodes;
+
+            // go:
+            init();
+            render();
+
+            function init () {
+
+                /* Input */
+                var inputController = new InputController(bindings);
+
+                inputController.registerDeviceHandler(MouseHandler, 'mouse');
+                inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+
+                inputController.deviceHandlers.mouse.infiniteXAxis = true;
+
+                // this is where we can read input data from:
+                input = inputController.input;
+
+
+                /* Scene & Camera */
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(25, SCREEN_WIDTH / SCREEN_HEIGHT);
+                camera.position.y = 10;
+                scene.add(camera);
+
+                /* Renderer */
+                renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                document.body.appendChild(renderer.domElement);
+
+                /* Lights */
+                var ambientLight = new THREE.AmbientLight(0x606060);
+                scene.add(ambientLight);
+
+                /* Ground */
+                var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10, 10), new THREE.MeshBasicMaterial({ color: 0x808080, wireframe: true }));
+                scene.add(plane);
+
+                window.addEventListener('resize', onResize, false);
+            }
+
+            function render (delta) {
+
+                requestAnimationFrame(render);
+
+                visualizeInput();
+
+                camera.position.y = 10;
+
+                if(input.forward){
+                    camera.translateZ(-1);
+                }
+                if(input.backward){
+                    camera.translateZ(1);
+                }
+
+                camera.translateX( ( input.strafeRight - input.strafeLeft) / 2 );
+
+
+                var vec = new THREE.Vector3(
+                    input.look / 100,
+                    input.turn / SCREEN_WIDTH,
+                    0
+                );
+
+                camera.rotation.y -= input.turn / SCREEN_WIDTH * 2;
+
+                input.turn = 0;
+
+                if(input.toggleSomething){
+                    visualisationNodes.wrapper.classList.toggle('hidden');
+                    input.toggleSomething = false;
+                }
+
+                renderer.render(scene, camera);
+
+            }
+
+            function visualizeInput () {
+                if(!visualisationNodes){
+                    visualisationNodes = {
+                        wrapper: document.getElementById('vis'),
+                        turn: document.getElementById('turn').firstChild,
+                        fwd: document.getElementById('fwd'),
+                        back: document.getElementById('back'),
+                        right: document.getElementById('right'),
+                        left: document.getElementById('left')
+                    };
+                }
+                visualisationNodes.turn.style.left = ( input.turn / SCREEN_WIDTH * 200 ) + 50 + 'px';
+                visualisationNodes.fwd.className = input.forward ? 'input-active' : '';
+                visualisationNodes.back.className = input.backward ? 'input-active' : '';
+                visualisationNodes.right.className = input.strafeRight ? 'input-active' : '';
+                visualisationNodes.left.className = input.strafeLeft ? 'input-active' : '';
+            }
+
+            function onResize(){
+                SCREEN_HEIGHT = window.innerHeight;
+                SCREEN_WIDTH = window.innerWidth;
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+                camera.updateProjectionMatrix();
+            }
+        });
+
+    </script>
+</body>
+</html>

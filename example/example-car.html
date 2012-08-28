@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decoupled Input -- Car Style Example</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        #info {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            font-family: monospace;
+        }
+        button {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+        #vis {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-family: sans-serif;
+        }
+        #vis.hidden {
+            display: none;
+        }
+        #steering {
+            margin: 20px 0;
+            border: solid 1px gray;
+            position: relative;
+            width: 100px;
+            height: 17px;
+            padding-right: 3px;
+        }
+        #steering span {
+            position: absolute;
+            top: 0;
+            left: 50%;
+        }
+        .input-active {
+            color: green;
+        }
+    </style>
+    <script src="Three.js"></script>
+    <script src="require.js"></script>
+    <script src="game-shim.js"></script>
+</head>
+<body>
+    <div id="info">
+        Decoupled Input -- Car Style Example<br>
+        accel/brake: W/S | steering: mouse | boost: mouse button | toggle vis: T
+    </div>
+    <button onclick="document.documentElement.requestFullScreen();GameShim.supports.pointerLock && document.documentElement.requestPointerLock();">Fullscreen</button>
+    <div id="vis">
+        <div id="accel">Accelerate</div>
+        <div id="brake">Brake</div>
+        <div id="boost">Boost</div>
+        <div id="steering"><span>|</span></div>
+    </div>
+    <script type="text/javascript">
+
+        // require controller files...
+        require([
+            // the controller itself:
+            '../src/Controller',
+            // the device handlers:
+            '../src/Mouse',
+            '../src/Keyboard',
+            // and the bindings file:
+            'bindings-car'
+        ], function(
+            InputController,
+            MouseHandler,
+            Keyboardhandler,
+            bindings
+        ){
+
+            var camera, scene, renderer;
+            var SCREEN_HEIGHT = window.innerHeight;
+            var SCREEN_WIDTH = window.innerWidth;
+
+            var input; // this is where we will put input data into.
+
+            var speed = 0,
+                steering = 0;
+
+            var visualisationNodes;
+
+            // go:
+            init();
+            render();
+
+            function init () {
+
+                /* Input */
+                var inputController = new InputController(bindings);
+                inputController.registerDeviceHandler(MouseHandler, 'mouse');
+                inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+
+                // this is where we can read input data from:
+                input = inputController.input;
+
+                /* Scene & Camera */
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(25, SCREEN_WIDTH / SCREEN_HEIGHT);
+                camera.position.y = 10;
+                scene.add(camera);
+
+                /* Renderer */
+                renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                document.body.appendChild(renderer.domElement);
+
+                /* Lights */
+                var ambientLight = new THREE.AmbientLight(0x606060);
+                scene.add(ambientLight);
+
+                /* Ground */
+                var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10, 10), new THREE.MeshBasicMaterial({ color: 0x808080, wireframe: true }));
+                scene.add(plane);
+
+                window.addEventListener('resize', onResize, false);
+            }
+
+            function render (delta) {
+
+                requestAnimationFrame(render);
+
+                visualizeInput();
+
+                speed += (input.accelerate - input.brake) / 50;
+                speed = THREE.Math.clamp(speed, -0.5, 1);
+
+                if (input.boost) {
+                    speed *= 1.5;
+                }
+
+                camera.translateZ(-speed);
+
+                camera.rotation.y += input.steering / 100 * speed;
+
+                if(input.toggleSomething){
+                    visualisationNodes.wrapper.classList.toggle('hidden');
+                    input.toggleSomething = false;
+                }
+
+                renderer.render(scene, camera);
+
+            }
+
+            function visualizeInput () {
+                if(!visualisationNodes){
+                    visualisationNodes = {
+                        wrapper: document.getElementById('vis'),
+                        steering: document.getElementById('steering').firstChild,
+                        accelerate: document.getElementById('accel'),
+                        brake: document.getElementById('brake'),
+                        boost: document.getElementById('boost')
+                    };
+                }
+                visualisationNodes.steering.style.left = ( input.steering * -50 + 50 ) + 'px';
+                visualisationNodes.accelerate.className = input.accelerate ? 'input-active' : '';
+                visualisationNodes.brake.className = input.brake ? 'input-active' : '';
+                visualisationNodes.boost.className = input.boost ? 'input-active' : '';
+            }
+
+            function onResize(){
+                SCREEN_HEIGHT = window.innerHeight;
+                SCREEN_WIDTH = window.innerWidth;
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+                camera.updateProjectionMatrix();
+            }
+        });
+
+
+    </script>
+</body>
+</html>

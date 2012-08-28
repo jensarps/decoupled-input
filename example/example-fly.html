@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decoupled Input -- Fly Style Example</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        #info {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            font-family: monospace;
+        }
+        button {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+    </style>
+    <script src="Three.js"></script>
+    <script src="require.js"></script>
+    <script src="game-shim.js"></script>
+</head>
+<body>
+    <div id="info">
+        Decoupled Input -- Fly Style Example<br>
+        accel/decel: W/S | steering: mouse | boost: mouse button
+    </div>
+    <button onclick="document.documentElement.requestFullScreen();GameShim.supports.pointerLock && document.documentElement.requestPointerLock();">Fullscreen</button>
+    <script type="text/javascript">
+
+        // require controller files...
+        require([
+            // the controller itself:
+            '../src/Controller',
+            // the device handlers:
+            '../src/Mouse',
+            '../src/Keyboard',
+            // and the bindings file:
+            'bindings-fly'
+        ], function(
+            InputController,
+            MouseHandler,
+            Keyboardhandler,
+            bindings
+        ){
+
+            var camera, scene, renderer;
+            var SCREEN_HEIGHT = window.innerHeight;
+            var SCREEN_WIDTH = window.innerWidth;
+
+            var input; // this is where we will put input data into.
+
+            var speed = 0,
+                steering = 0;
+
+            var visualisationNodes;
+
+            // go:
+            init();
+            render();
+
+            function init () {
+
+                /* Input */
+                var inputController = new InputController(bindings);
+                inputController.registerDeviceHandler(MouseHandler, 'mouse');
+                inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+
+                inputController.deviceHandlers.mouse.invertYAxis = true;
+
+                // this is where we can read input data from:
+                input = inputController.input;
+
+                /* Scene & Camera */
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(25, SCREEN_WIDTH / SCREEN_HEIGHT);
+                camera.position.y = 50;
+                camera.useQuaternion = true;
+                scene.add(camera);
+
+                /* Renderer */
+                renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                document.body.appendChild(renderer.domElement);
+
+                /* Lights */
+                var ambientLight = new THREE.AmbientLight(0x606060);
+                scene.add(ambientLight);
+
+                /* Ground */
+                var plane = new THREE.Mesh(new THREE.PlaneGeometry(10000, 10000, 100, 100), new THREE.MeshBasicMaterial({ color: 0x808080, wireframe: true }));
+                scene.add(plane);
+
+                window.addEventListener('resize', onResize, false);
+            }
+
+            function render (delta) {
+
+                requestAnimationFrame(render);
+
+                speed += (input.accelerate - input.decelerate) / 50;
+                speed = THREE.Math.clamp(speed, 1, 4);
+
+                if (input.boost) {
+                    speed *= 1.5;
+                }
+
+                camera.translateZ(-speed);
+
+                camera.quaternion.multiplySelf(new THREE.Quaternion(input.pitch / 300, 0, input.roll / 300, 1).normalize());
+                camera.matrix.setRotationFromQuaternion(camera.quaternion);
+                camera.matrixWorldNeedsUpdate = true;
+
+                renderer.render(scene, camera);
+            }
+
+            function onResize(){
+                SCREEN_HEIGHT = window.innerHeight;
+                SCREEN_WIDTH = window.innerWidth;
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+                camera.updateProjectionMatrix();
+            }
+        });
+
+
+    </script>
+</body>
+</html>
