@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset='utf-8'>
-
     <title>decoupled-input</title>
     <link rel="stylesheet" href="/css/style.css"/>
 </head>
@@ -23,10 +22,10 @@
         A flexible and lightweight decoupled input controller
     </div>
 
-    <h1 id="about">About</h1>
+    <h2 id="about">About</h2>
 
     <p>decoupled-input is a flexible and lightweight input controller for games
-        that allows to seperate input listeners for different devices from the
+        that allows to separate input listeners for different devices from the
         actual input computing logic.</p>
 
     <p>This allows to change input bindings and devices without having to change
@@ -45,223 +44,9 @@
         as I have a gamepad successfully connected to my machine, a gamepad
         handler will follow).</p>
 
-    <h1 id="how-it-works">How It Works</h1>
+    <h2 id="how-it-works">How It Works</h2>
 
-    <p><em>(For full example code and bindings please see the Examples
-        section.)</em></p>
-
-    <p>The decoupled-input modules come in AMD format. There two types of
-        modules: a controller and device handlers. To work, there is also a
-        binding configuration needed.</p>
-
-    <p>An input setup looks like this:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">
-    <span class="kw">var</span> inputController = <span class="kw">new</span>
-    InputController(bindings);
-    <span class="kw">inputController</span>.<span class="fu">registerDeviceHandler</span>(MouseHandler,
-    <span class="ch">&#39;mouse&#39;</span>);
-    <span class="kw">inputController</span>.<span class="fu">registerDeviceHandler</span>(Keyboardhandler,
-    <span class="ch">&#39;keyboard&#39;</span>);
-
-    <span class="kw">var</span> input = <span class="kw">inputController</span>.<span
-        class="fu">input</span>; <span class="co">// this is where all input is stored</span>
-
-    <span class="co">// later:</span>
-    <span class="kw">if</span>(<span class="kw">input</span>.<span class="fu">accelerate</span>){
-    <span class="co">// accelerate something</span>
-    }</code></pre>
-    <h1 id="device-handlers">Device Handlers</h1>
-
-    <p><em>(For full example code and bindings please see the Examples
-        section.)</em></p>
-
-    <p>Device handlers connect to events and feed values back to the controller.
-        There are two handlers bundled, but you could easily write your own
-        handlers.</p>
-
-    <p>Device handlers must be passed to the controller instance's <code>registerDeviceHandler</code>
-        method, along with the device name -- this device name must be the same
-        string as the corresponding device name in the binding configuration.
-    </p>
-
-    <p>A device handler instance is available in the controller instance under
-        it's device name property, e.g. to set handling options:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">
-    <span class="kw">inputController</span>.<span class="fu">registerDeviceHandler</span>(MouseHandler,
-    <span class="ch">&#39;mouse&#39;</span>);
-
-    <span class="kw">inputController.deviceHandlers.mouse</span>.<span
-        class="fu">invertYAxis</span> = <span
-        class="kw">true</span>;</code></pre>
-    <p>The mouse device handler has four configurable options that can be
-        changed anytime (i.e. also during runtime):</p>
-    <ul>
-        <li>invertXAxis</li>
-        <li>invertYaxis</li>
-        <li>infiniteXAxis</li>
-        <li>infiniteYAxis</li>
-    </ul>
-    <p>By default, all are set to false. The invert[X/Y]Axis properties will
-        invert the values for an axis. The infinite[X/Y]Axis properties will
-        change the reporting of an axis value from the default schema (-1..1) to
-        a diff schema, i.e. the reported value will be the diff from the last
-        measured position for that axis. This is especially useful for FPS-like
-        input when pointer lock is enabled. For more info on this, refer to the
-        Pointer Lock section.</p>
-
-    <p>The First Person style example uses infiniteXAxis, and the fly style
-        example uses invertYAxis.</p>
-
-    <h1 id="bindings-configuration">Bindings Configuration</h1>
-
-    <p><em>(For full example code and bindings please see the Examples
-        section.)</em></p>
-
-    <p>A binding configuration looks like this:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">
-    <span class="kw">var</span> bindings = {
-
-    <span class="dt">forward</span>: {
-    <span class="dt">device</span>: <span class="ch">&#39;keyboard&#39;</span>,
-    <span class="co">// the device name</span>
-    <span class="dt">inputId</span>: <span class="dv">87</span>, <span
-        class="co">// the input id; for keyboards, the char code</span>
-    <span class="dt">down</span>: <span class="kw">true</span>, <span
-        class="co">// if the controller should act on down state</span>
-    <span class="dt">up</span>: <span class="kw">true</span> <span class="co">// if the controller should act on up state</span>
-    },
-
-    <span class="dt">fire</span>: {
-    <span class="dt">device</span>: <span class="ch">&#39;mouse&#39;</span>,
-    <span class="co">// the device name</span>
-    <span class="dt">inputId</span>: <span class="ch">&#39;button&#39;</span>,
-    <span class="co">// currently, only the left mouse button is supported</span>
-    <span class="dt">down</span>: <span class="kw">true</span>, <span
-        class="co">// if the controller should act on down state</span>
-    <span class="dt">up</span>: <span class="kw">true</span> <span class="co">// if the controller should act on up state</span>
-    },
-
-    <span class="dt">pitch</span>: {
-    <span class="dt">device</span>: <span class="ch">&#39;mouse&#39;</span>,
-    <span class="co">// the device name</span>
-    <span class="dt">inputId</span>: <span class="ch">&#39;y&#39;</span> <span
-        class="co">// axis input is either x or y</span>
-    <span class="co">// no up/down properties need to be provided for axis bindings</span>
-    }
-    }</code></pre>
-    <h1 id="the-input-object">The Input Object</h1>
-
-    <p><em>(For full example code and bindings please see the Examples
-        section.)</em></p>
-
-    <p>All user input is gathered and available in the inputController's input
-        object. A specific input's property name is the name specified in the
-        bindings config and the value always is a number. All values are
-        numeric; button/keyboard values are either 1 or 0, axis values range
-        from -1 to 1.</p>
-
-    <p>This allows:</p>
-    <ul>
-        <li>boolean checks on buttons</li>
-        <li>easy mathematical operations for button and axis input values</li>
-    </ul>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">
-    <span class="co">// doing some math:</span>
-    speed += (<span class="kw">input</span>.<span class="fu">accelerate</span> -
-    <span class="kw">input</span>.<span class="fu">brake</span>) / <span
-        class="dv">50</span>;
-    speed = <span class="kw">THREE.Math</span>.<span class="fu">clamp</span>(speed,
-    -<span class="fl">0.5</span>, <span class="dv">1</span>);
-
-    <span class="co">// boolean check:</span>
-    <span class="kw">if</span> (<span class="kw">input</span>.<span class="fu">boost</span>)
-    {
-    speed *= <span class="fl">1.5</span>;
-    }</code></pre>
-    <p>The mouse device handler also adds two extra properties to the input
-        object:</p>
-    <ul>
-        <li>mouseX</li>
-        <li>mouseY</li>
-    </ul>
-    <p>Both values always carry the current mouse position, also in locked
-        pointer mode. You can use these values, if you, e.g. are running your
-        game in fullscreen with pointer lock enabled and still want to display a
-        cursor.</p>
-
-    <h1 id="examples">Examples</h1>
-
-    <p>There are three examples available to see how it works, along with three
-        example bindings. All input handling logic happens in the
-        <code>render</code> function.</p>
-
-    <p><em>Note that these examples are just meant to demonstrate how to work
-        with bindings and read input values. They are neither visually
-        compelling, nor a recommended implementation of modifying the camera
-        position.</em></p>
-    <ul>
-        <li>First-Person style [code] [bindings] (This example uses
-            infiniteXAxis)
-        </li>
-        <li>Car style [code] [bindings]</li>
-        <li>Fly style [code] [bindings] (This example uses invertedYAxis)</li>
-    </ul>
-    <h2 id="pointerlock-infinitexyaxis">PointerLock / infinite[X/Y]Axis</h2>
-
-    <p>decoupled-input supports locked mouse pointers and abstracts away event
-        property differences. If you are using infinite[X/Y]Axis, you will
-        always get the mouse movement diff - whether pointer lock is enabled or
-        not. So you don't have to worry about that in your game logic. However,
-        when using infinite[X/Y]Axis, you will have to reset the input value in
-        the render loop after reading it:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">
-    <span class="co">// The input `turn` is an x axis with infiniteXAxis</span>
-
-    <span class="co">// handle the value</span>
-    <span class="kw">camera.rotation</span>.<span class="fu">y</span> -= <span
-        class="kw">input</span>.<span class="fu">turn</span> / SCREEN_WIDTH *
-    <span class="dv">2</span>;
-
-    <span class="co">// reset it</span>
-    <span class="kw">input</span>.<span class="fu">turn</span> = <span
-        class="dv">0</span>;
-</code></pre>
-    <p>The reason for that is simple: Mouse move events report movement, so the
-        movement diff will almost never be zero (no diff == no movement == no
-        event). That means even though the user has stopped moving the mouse,
-        the last value reported by the handler will most probably be non-zero --
-        which is just wrong.</p>
-
-    <h2 id="toggle-buttons">Toggle buttons</h2>
-
-    <p>Using button input to toggle something on and off (like a visual display)
-        is a common scenario. decoupled-input supports this, but you need to
-        tell the bindings to only listen to the down state only and reset the
-        input value yourself in your render loop after using it:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">
-    <span class="co">// in the bindings file:</span>
-
-    <span class="dt">toggleSomething</span>: {
-    <span class="dt">device</span>: KEYBOARD,
-    <span class="dt">inputId</span>: <span class="dv">84</span>, <span
-        class="co">// t</span>
-    <span class="dt">down</span>: <span class="kw">true</span>,
-    <span class="dt">up</span>: <span class="kw">false</span>
-    }
-
-    <span class="co">// in the render loop:</span>
-
-    <span class="kw">if</span>(<span class="kw">input</span>.<span class="fu">toggleSomething</span>){
-    <span class="kw">visualisationNodes.wrapper.classList</span>.<span
-        class="fu">toggle</span>(<span class="ch">&#39;hidden&#39;</span>);
-    <span class="kw">input</span>.<span class="fu">toggleSomething</span> =
-    <span class="dv">0</span>;
-    }</code></pre>
-    <p>The reason for this is simple as well: when a user presses a button -- no
-        matter how quick -- the time this takes will almost certainly cover
-        multiple render loops. So if you don't reset yourself, your toggle logic
-        will be executed over and over again, in every loop -- until the user
-        releases the button.</p>
+    <p>For usage details and everything else, please check the project's <a href="https://github.com/jensarps/decoupled-input#readme">README</a>.</p>
 
     <h2 id="dependecies">Dependecies</h2>
 
