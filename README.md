@@ -1,6 +1,6 @@
 #About
 
-decoupled-input is a flexible and lightweight input controller for games that allows to seperate input listeners for different devices from the actual input computing logic.
+decoupled-input is a flexible and lightweight input controller for games that allows to separate input listeners for different devices from the actual input computing logic.
 
 This allows to change input bindings and devices without having to change the program logic; e.g. if the "fire" action was bound to the space key and it should later be bound to a mouse button, the change is only being made in the bindings configuration, and the game logic remains entirely unaffected.
 
@@ -15,7 +15,7 @@ decoupled-input comes with handlers for mouse and keyboard (and as soon as I hav
 
 #How It Works
 
-_(For full example code and bindings please see the Examples section.)_
+_(For full example code and bindings please see the [Examples](#examples) section.)_
 
 The decoupled-input modules come in AMD format. There two types of modules: a controller and device handlers. To work, there is also a binding configuration needed.
 
@@ -38,7 +38,7 @@ if(input.accelerate){
 
 #Device Handlers
 
-_(For full example code and bindings please see the Examples section.)_
+_(For full example code and bindings please see the [Examples](#examples) section.)_
 
 Device handlers connect to events and feed values back to the controller. There are two handlers bundled, but you could easily write your own handlers.
 
@@ -68,7 +68,7 @@ The First Person style example uses infiniteXAxis, and the fly style example use
 
 #Bindings Configuration
 
-_(For full example code and bindings please see the Examples section.)_
+_(For full example code and bindings please see the [Examples](#examples) section.)_
 
 A binding configuration looks like this:
 
@@ -101,7 +101,7 @@ var bindings = {
 
 #The Input Object
 
-_(For full example code and bindings please see the Examples section.)_
+_(For full example code and bindings please see the [Examples](#examples) section.)_
 
 All user input is gathered and available in the inputController's input object. A specific input's property name is the name specified in the bindings config and the value always is a number. All values are numeric; button/keyboard values are either 1 or 0, axis values range from -1 to 1.
 
@@ -138,9 +138,9 @@ There are three examples available to see how it works, along with three example
 
 _Note that these examples are just meant to demonstrate how to work with bindings and read input values. They are neither visually compelling, nor a recommended implementation of modifying the camera position._
 
-* First-Person style [code] [bindings] (This example uses infiniteXAxis)
-* Car style [code] [bindings]
-* Fly style [code] [bindings] (This example uses invertedYAxis)
+* [First-Person style](http://jensarps.github.com/decoupled-input/example/example-first-person.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-first-person.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fps.js) -- This example uses `infiniteXAxis`
+* [Car style](http://jensarps.github.com/decoupled-input/example/example-car.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-car.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-car.js)
+* [Fly style](http://jensarps.github.com/decoupled-input/example/example-fly.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-fly.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fly.js) -- This example uses `invertedYAxis`
 
 
 ## PointerLock / infinite[X/Y]Axis
