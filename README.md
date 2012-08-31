@@ -78,14 +78,14 @@ var bindings = {
 
   forward: {
     device: 'keyboard', // the device name
-    inputId: 87, // the input id; for keyboards, the char code
+    inputId: 87, // the input id; for keyboards, the key code
     down: true, // if the controller should act on down state
     up: true // if the controller should act on up state
   },
 
   fire: {
     device: 'mouse', // the device name
-    inputId: 'button', // currently, only the left mouse button is supported
+    inputId: 0, // which mouse button: left = 0, middle = 1, right = 2
     down: true, // if the controller should act on down state
     up: true // if the controller should act on up state
   },
