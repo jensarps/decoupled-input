@@ -78,14 +78,14 @@ var bindings = {
 
   forward: {
     device: 'keyboard', // the device name
-    inputId: 87, // the input id; for keyboards, the char code
+    inputId: 87, // the input id; for keyboards, the key code
     down: true, // if the controller should act on down state
     up: true // if the controller should act on up state
   },
 
   fire: {
     device: 'mouse', // the device name
-    inputId: 'button', // currently, only the left mouse button is supported
+    inputId: 0, // which mouse button: left = 0, middle = 1, right = 2
     down: true, // if the controller should act on down state
     up: true // if the controller should act on up state
   },
@@ -98,6 +98,16 @@ var bindings = {
 }
 
 ~~~
+
+An entry in the bindings object is an object itself, containing all information about the key/button/axis to be bound. The property name of the entry (e.g. "forward" in the example above) is where the corresponding input value can be found in the input object. In the example above, to check whether the key has been pressed, one would check for `input.forward`.
+
+Every entry must provide four properties (except for axis bindings, see below):
+
+* `device`: The device name, corresponding to the device name passed with the device handler
+* `inputId`: The key/button/axis to bind. For keyboard devices, pass the key code of the key, as found in the `keyCode` property in mousedown events. For mouse buttons, pass the button id: `0` for the left button, `1` for the middle button and `2` for the right button. For axis bindings, pass `'x'` or `'y'`.
+* `down`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a downstate of the key/button. In most cases, this should be `true` (in fact, I can't really think of a scenario where you would want this to be false, but, hey, I don't know, so you can configure it).
+* `up`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a upstate of the key/button. In most cases, this should be `true`; except for bindings that are used to toggle something (see section [Toggle Buttons](#toggle-buttons) below for details).
+
 
 #The Input Object
 

@@ -28,7 +28,7 @@ define(function(){
 
     boost: {
       device: MOUSE,
-      inputId: 'button',
+      inputId: 0, // left button
       down: true,
       up: true
     },

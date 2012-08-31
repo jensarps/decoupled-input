@@ -10,6 +10,7 @@ define(function(){
     document.addEventListener('mousemove', ( this.moveListener = this.onMouseMove.bind(this) ), false);
     document.addEventListener('mousedown', ( this.downListener = this.onMouseDown.bind(this) ), false);
     document.addEventListener('mouseup', ( this.upListener = this.onMouseUp.bind(this) ), false);
+    document.addEventListener('contextmenu', ( this.ctxListener = function(evt){ evt.preventDefault(); }).bind(this), false);
     window.addEventListener('resize', ( this.resizeListener = this.onResize.bind(this) ), false);
     this.onResize();
   };
@@ -71,8 +72,8 @@ define(function(){
     },
 
     onMouseDown: function(evt){
-      if('button' in this.bindings){
-        var binding = this.bindings.button;
+      if(evt.button in this.bindings){
+        var binding = this.bindings[evt.button];
         if(binding.down){
           this.input[binding.description] = 1;
         }
@@ -80,8 +81,8 @@ define(function(){
     },
 
     onMouseUp: function(evt){
-      if('button' in this.bindings){
-        var binding = this.bindings.button;
+      if(evt.button in this.bindings){
+        var binding = this.bindings[evt.button];
         if(binding.up){
           this.input[binding.description] = 0;
         }
@@ -97,6 +98,7 @@ define(function(){
       document.removeEventListener('mousemove', this.moveListener, false);
       document.removeEventListener('mousedown', this.downListener, false);
       document.removeEventListener('mouseup', this.upListener, false);
+      document.removeEventListener('contextmenu', this.ctxListener, false);
       window.removeEventListener('resize', this.resizeListener, false);
     }
   };
