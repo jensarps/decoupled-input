@@ -108,6 +108,34 @@ Every entry must provide four properties (except for axis bindings, see below):
 * `down`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a downstate of the key/button. In most cases, this should be `true` (in fact, I can't really think of a scenario where you would want this to be false, but, hey, I don't know, so you can configure it).
 * `up`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a upstate of the key/button. In most cases, this should be `true`; except for bindings that are used to toggle something (see section [Toggle Buttons](#toggle-buttons) below for details).
 
+##Assigning multiple input options
+
+To e.g. assign multiple keys to one action, just provide an array with all possible bindings for the action:
+
+~~~javascript
+
+var bindings = {
+
+    forward: [
+      {
+        device: KEYBOARD,
+        inputId: 87, // w
+        down: true,
+        up: true
+      },
+      {
+        device: KEYBOARD,
+        inputId: 38, // cursor up
+        down: true,
+        up: true
+      }
+    ]
+}
+
+~~~
+
+The FPS example uses multiple assignments.
+
 
 #The Input Object
 
