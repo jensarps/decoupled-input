@@ -1,6 +1,6 @@
-define(function(){
+define(function () {
 
-  var InputController = function(bindings){
+  var InputController = function (bindings) {
     this.bindings = {};
     this.deviceHandlers = {};
     this.input = {};
@@ -8,15 +8,15 @@ define(function(){
   };
 
   InputController.prototype = {
-    
+
     bindings: null,
 
     deviceHandlers: null,
 
     input: null,
 
-    setupBindings: function(bindings){
-      Object.keys(bindings).forEach(function(description){
+    setupBindings: function (bindings) {
+      Object.keys(bindings).forEach(function (description) {
         var binding = bindings[description],
             toString = ({}).toString;
 
@@ -24,38 +24,34 @@ define(function(){
         // a user input occurs.
         this.input[description] = 0;
 
-        if(toString.call(binding) == '[object Array]'){
-          for(var i= 0, m=binding.length; i<m; i++){
+        if (toString.call(binding) == '[object Array]') {
+          for (var i = 0, m = binding.length; i < m; i++) {
             var _binding = binding[i];
-
-            if(!this.bindings[_binding.device]){
-              this.bindings[_binding.device] = {};
-            }
-            this.bindings[_binding.device][_binding.inputId] = {
-              description: description,
-              down: _binding.down,
-              up: _binding.up
-            }
+            this._applyBinding(_binding, description);
           }
-        }
-
-        if(!this.bindings[binding.device]){
-          this.bindings[binding.device] = {};
-        }
-        this.bindings[binding.device][binding.inputId] = {
-          description: description,
-          down: binding.down,
-          up: binding.up
+        } else {
+          this._applyBinding(binding, description);
         }
       }, this);
     },
 
-    registerDeviceHandler: function(DeviceHandler, deviceName){
+    _applyBinding: function (binding, description) {
+      if (!this.bindings[binding.device]) {
+        this.bindings[binding.device] = {};
+      }
+      this.bindings[binding.device][binding.inputId] = {
+        description: description,
+        down: binding.down,
+        up: binding.up
+      }
+    },
+
+    registerDeviceHandler: function (DeviceHandler, deviceName) {
       this.deviceHandlers[deviceName] = new DeviceHandler(this.bindings[deviceName], this.input);
     },
 
-    destroy: function(){
-      Object.keys(this.deviceHandlers).forEach(function(deviceName){
+    destroy: function () {
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         this.deviceHandlers[deviceName].destroy();
       }, this);
     }
