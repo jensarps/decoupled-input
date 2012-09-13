@@ -17,11 +17,27 @@ define(function(){
 
     setupBindings: function(bindings){
       Object.keys(bindings).forEach(function(description){
-        var binding = bindings[description];
+        var binding = bindings[description],
+            toString = ({}).toString;
 
         // set a default value; the value must be readable before
         // a user input occurs.
         this.input[description] = 0;
+
+        if(toString.call(binding) == '[object Array]'){
+          for(var i= 0, m=binding.length; i<m; i++){
+            var _binding = binding[i];
+
+            if(!this.bindings[_binding.device]){
+              this.bindings[_binding.device] = {};
+            }
+            this.bindings[_binding.device][_binding.inputId] = {
+              description: description,
+              down: _binding.down,
+              up: _binding.up
+            }
+          }
+        }
 
         if(!this.bindings[binding.device]){
           this.bindings[binding.device] = {};
