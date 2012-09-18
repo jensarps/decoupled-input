@@ -1,9 +1,7 @@
 define(function () {
 
   var InputController = function (bindings) {
-    this.bindings = {};
     this.deviceHandlers = {};
-    this.input = {};
     this.setupBindings(bindings);
   };
 
@@ -16,6 +14,9 @@ define(function () {
     input: null,
 
     setupBindings: function (bindings) {
+      this.bindings = {};
+      this.input = {};
+
       Object.keys(bindings).forEach(function (description) {
         var binding = bindings[description],
             toString = ({}).toString;
@@ -35,19 +36,29 @@ define(function () {
       }, this);
     },
 
+    updateBindings: function(bindings){
+      this.setupBindings(bindings);
+
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
+        this.deviceHandlers[deviceName].bindings = this.bindings[deviceName] || {};
+        this.deviceHandlers[deviceName].input = this.input;
+      }, this);
+    },
+
     _applyBinding: function (binding, description) {
       if (!this.bindings[binding.device]) {
         this.bindings[binding.device] = {};
       }
       this.bindings[binding.device][binding.inputId] = {
         description: description,
-        down: binding.down,
-        up: binding.up
+        down: !!binding.down,
+        up: !!binding.up,
+        invert: !!binding.invert
       }
     },
 
     registerDeviceHandler: function (DeviceHandler, deviceName) {
-      this.deviceHandlers[deviceName] = new DeviceHandler(this.bindings[deviceName], this.input);
+      this.deviceHandlers[deviceName] = new DeviceHandler(this.bindings[deviceName] || {}, this.input);
     },
 
     destroy: function () {
