@@ -38,12 +38,20 @@ define(function(){
       }
     ],
 
-    boost: {
-      device: MOUSE,
-      inputId: 0,
-      down: true,
-      up: true
-    },
+    boost: [
+      {
+        device: MOUSE,
+        inputId: 0,
+        down: true,
+        up: true
+      },
+      {
+        device: GAMEPAD,
+        inputId: 'button-1', // B
+        down: true,
+        up: true
+      }
+    ],
 
     pitch: [
       {
