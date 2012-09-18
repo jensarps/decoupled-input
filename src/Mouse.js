@@ -17,10 +17,6 @@ define(function(){
 
   Mouse.prototype = {
 
-    invertXAxis: false,
-
-    invertYAxis: false,
-
     infiniteXAxis: false,
 
     infiniteYAxis: false,
@@ -51,23 +47,16 @@ define(function(){
         ( document.pointerLockEnabled ? evt.movementY : mouseY - this.input.mouseY ) :
         -( mouseY - halfHeight ) / halfHeight;
 
-      if(this.invertXAxis){
-        x *= -1;
-      }
-      if(this.invertYAxis){
-        y *= -1;
-      }
-
       this.input.mouseX = mouseX;
       this.input.mouseY = mouseY;
 
       if('x' in this.bindings){
         var binding = this.bindings.x;
-        this.input[binding.description] = x;
+        this.input[binding.description] = binding.invert ? x * -1 : x;
       }
       if('y' in this.bindings){
         var binding = this.bindings.y;
-        this.input[binding.description] = y;
+        this.input[binding.description] = binding.invert ? y * -1 : y;
       }
     },
 

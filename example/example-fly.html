@@ -27,7 +27,8 @@
 <body>
     <div id="info">
         Decoupled Input -- Fly Style Example<br>
-        accel/decel: W/S | steering: mouse | boost: mouse button
+        <em>kbd + mouse:</em> accel/decel: W/S | steering: mouse | boost: mouse button<br>
+        <em>gamepad:</em> accel/decel: Y/A | steering: left stick | boost: B
     </div>
     <button onclick="document.documentElement.requestFullScreen();GameShim.supports.pointerLock && document.documentElement.requestPointerLock();">Fullscreen</button>
     <script type="text/javascript">
@@ -39,12 +40,14 @@
             // the device handlers:
             '../src/Mouse',
             '../src/Keyboard',
+            '../src/Gamepad',
             // and the bindings file:
             'bindings-fly'
         ], function(
             InputController,
             MouseHandler,
             Keyboardhandler,
+            GamepadHandler,
             bindings
         ){
 
@@ -69,6 +72,7 @@
                 var inputController = new InputController(bindings);
                 inputController.registerDeviceHandler(MouseHandler, 'mouse');
                 inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+                inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
 
                 inputController.deviceHandlers.mouse.invertYAxis = true;
 
