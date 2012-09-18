@@ -48,7 +48,8 @@ define(function(){
     pitch: [
       {
         device: MOUSE,
-        inputId: 'y'
+        inputId: 'y',
+        invert: true
       },
       {
         device: GAMEPAD,
@@ -63,7 +64,8 @@ define(function(){
       },
       {
         device: GAMEPAD,
-        inputId: 'axis-0'
+        inputId: 'axis-0',
+        invert: true
       }
     ],
 

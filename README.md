@@ -8,7 +8,7 @@ Other benefits are:
 
 * Code gets more readable
 * Interpretation of input happens in the render loop
-* Boolean and analog axis input can be handled by the same code
+* Boolean (button/key) and analog axis input can be handled by the same code
 
 decoupled-input comes with handlers for mouse and keyboard (and as soon as I have a gamepad successfully connected to my machine, a gamepad handler will follow).
 
@@ -54,17 +54,14 @@ inputController.deviceHandlers.mouse.invertYAxis = true;
 
 ~~~
 
-The mouse device handler has four configurable options that can be changed anytime (i.e. also during runtime):
+The mouse device handler has two configurable options that can be changed anytime (i.e. also during runtime):
 
-* invertXAxis
-* invertYaxis
 * infiniteXAxis
 * infiniteYAxis
 
-By default, all are set to false. The invert[X/Y]Axis properties will invert the values for an axis. The infinite[X/Y]Axis properties will change the reporting of an axis value from the default schema (-1..1) to a diff schema, i.e. the reported value will be the diff from the last measured position for that axis. This is especially useful for FPS-like input when pointer lock is enabled. For more info on this, refer to the Pointer Lock section.
+By default, both are set to false. The infinite[X/Y]Axis properties will change the reporting of an axis value from the default schema (-1..1) to a diff schema, i.e. the reported value will be the diff from the last measured position for that axis. This is especially useful for FPS-like input when pointer lock is enabled. For more info on this, refer to the Pointer Lock section.
 
-The First Person style example uses infiniteXAxis, and the fly style example uses invertYAxis.
-
+The First Person style example uses infiniteXAxis.
 
 #Bindings Configuration
 
@@ -94,6 +91,7 @@ var bindings = {
     device: 'mouse', // the device name
     inputId: 'y' // axis input is either x or y
     // no up/down properties need to be provided for axis bindings
+    invert: true // if the axis should be inverted
   }
 }
 
@@ -107,6 +105,7 @@ Every entry must provide four properties (except for axis bindings, see below):
 * `inputId`: The key/button/axis to bind. For keyboard devices, pass the key code of the key, as found in the `keyCode` property in mousedown events. For mouse buttons, pass the button id: `0` for the left button, `1` for the middle button and `2` for the right button. For axis bindings, pass `'x'` or `'y'`.
 * `down`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a downstate of the key/button. In most cases, this should be `true` (in fact, I can't really think of a scenario where you would want this to be false, but, hey, I don't know, so you can configure it).
 * `up`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a upstate of the key/button. In most cases, this should be `true`; except for bindings that are used to toggle something (see section [Toggle Buttons](#toggle-buttons) below for details).
+* `invert`: [NOTE: Not needed for keys or buttons] Whether the axis should be inverted. The fly example uses inverted y axis.
 
 ##Assigning multiple input options
 
@@ -178,7 +177,7 @@ _Note that these examples are just meant to demonstrate how to work with binding
 
 * [First-Person style](http://jensarps.github.com/decoupled-input/example/example-first-person.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-first-person.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fps.js) -- This example uses `infiniteXAxis`
 * [Car style](http://jensarps.github.com/decoupled-input/example/example-car.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-car.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-car.js)
-* [Fly style](http://jensarps.github.com/decoupled-input/example/example-fly.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-fly.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fly.js) -- This example uses `invertedYAxis`
+* [Fly style](http://jensarps.github.com/decoupled-input/example/example-fly.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-fly.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fly.js) -- This example uses `invert: true` for it's y-axis.
 
 
 ## PointerLock / infinite[X/Y]Axis

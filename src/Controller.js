@@ -41,8 +41,9 @@ define(function () {
       }
       this.bindings[binding.device][binding.inputId] = {
         description: description,
-        down: binding.down,
-        up: binding.up
+        down: !!binding.down,
+        up: !!binding.up,
+        invert: !!binding.invert
       }
     },
 
