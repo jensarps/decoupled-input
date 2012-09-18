@@ -1,6 +1,6 @@
 define(function(){
 
-  var Mouse = function(bindings, input){
+  var MouseHandler = function(bindings, input){
     this.bindings = bindings;
     this.input = input;
 
@@ -15,7 +15,7 @@ define(function(){
     this.onResize();
   };
 
-  Mouse.prototype = {
+  MouseHandler.prototype = {
 
     infiniteXAxis: false,
 
@@ -96,5 +96,5 @@ define(function(){
     return Math.min(max, Math.max(min, value));
   }
 
-  return Mouse;
+  return MouseHandler;
 });
