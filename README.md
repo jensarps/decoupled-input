@@ -21,6 +21,8 @@ _(For full example code and bindings please see the [Examples](#examples) sectio
 
 The decoupled-input modules come in AMD format. There two types of modules: a controller and device handlers. To work, there is also a binding configuration needed.
 
+If you're not into working with modules, you can grab the `input.js` file from the `build` directory and iclude it via a `<script>` tag. That file contains all needed modules and exposes them to global using the names found in the example below.
+
 An input setup looks like this:
 
 ~~~javascript

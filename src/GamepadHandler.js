@@ -6,7 +6,7 @@ define(function () {
    * http://www.html5rocks.com/en/tutorials/doodles/gamepad/
    */
 
-  var Gamepad = function (bindings, input) {
+  var GamepadHandler = function (bindings, input) {
     this.bindings = bindings;
     this.input = input;
 
@@ -18,7 +18,7 @@ define(function () {
     this.init();
   };
 
-  Gamepad.prototype = {
+  GamepadHandler.prototype = {
 
     deadzone: 0.01,
 
@@ -176,6 +176,6 @@ define(function () {
     }
   };
 
-  return Gamepad;
+  return GamepadHandler;
 
 });

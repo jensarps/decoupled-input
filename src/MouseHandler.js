@@ -1,6 +1,6 @@
 define(function(){
 
-  var Mouse = function(bindings, input){
+  var MouseHandler = function(bindings, input){
     this.bindings = bindings;
     this.input = input;
 
@@ -15,7 +15,7 @@ define(function(){
     this.onResize();
   };
 
-  Mouse.prototype = {
+  MouseHandler.prototype = {
 
     infiniteXAxis: false,
 
@@ -33,8 +33,8 @@ define(function(){
           halfHeight = height / 2;
 
       if(document.pointerLockEnabled){
-        mouseX = clamp(0, width, this.input.mouseX + evt.movementX);
-        mouseY = clamp(0, height, this.input.mouseY + evt.movementY);
+        mouseX = this.clamp(0, width, this.input.mouseX + evt.movementX);
+        mouseY = this.clamp(0, height, this.input.mouseY + evt.movementY);
       }else{
         mouseX = evt.pageX;
         mouseY = evt.pageY;
@@ -83,6 +83,10 @@ define(function(){
       this.height = window.innerHeight;
     },
 
+    clamp: function (min, max, value){
+      return Math.min(max, Math.max(min, value));
+    },
+
     destroy: function(){
       document.removeEventListener('mousemove', this.moveListener, false);
       document.removeEventListener('mousedown', this.downListener, false);
@@ -92,9 +96,5 @@ define(function(){
     }
   };
 
-  function clamp(min, max, value){
-    return Math.min(max, Math.max(min, value));
-  }
-
-  return Mouse;
+  return MouseHandler;
 });
