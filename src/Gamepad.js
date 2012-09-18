@@ -162,6 +162,9 @@ define(function () {
         if(axisId in this.bindings){
           binding = this.bindings[axisId];
           var value = gamepad.axes[i];
+          if(binding.invert){
+            value *= -1;
+          }
           this.input[binding.description] = Math.abs(value) > this.deadzone ? value : 0;
         }
       }
