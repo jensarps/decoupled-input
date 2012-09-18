@@ -1,9 +1,7 @@
 define(function () {
 
   var InputController = function (bindings) {
-    this.bindings = {};
     this.deviceHandlers = {};
-    this.input = {};
     this.setupBindings(bindings);
   };
 
@@ -16,6 +14,9 @@ define(function () {
     input: null,
 
     setupBindings: function (bindings) {
+      this.bindings = {};
+      this.input = {};
+      
       Object.keys(bindings).forEach(function (description) {
         var binding = bindings[description],
             toString = ({}).toString;
