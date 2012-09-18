@@ -37,8 +37,8 @@ define(function () {
       var isAvailable = !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1);
 
       if (isAvailable) {
-        window.addEventListener('MozGamepadConnected', this.onGamepadConnect.bind(this), false);
-        window.addEventListener('MozGamepadDisconnected', this.onGamepadDisconnect.bind(this), false);
+        window.addEventListener('MozGamepadConnected', ( this.connectListener = this.onGamepadConnect.bind(this) ), false);
+        window.addEventListener('MozGamepadDisconnected', ( this.disconnectListener = this.onGamepadDisconnect.bind(this) ), false);
         if (!!navigator.webkitGamepads || !!navigator.webkitGetGamepads) {
           this.startPolling();
         }
@@ -165,6 +165,11 @@ define(function () {
           this.input[binding.description] = Math.abs(value) > this.deadzone ? value : 0;
         }
       }
+    },
+
+    destroy: function(){
+      window.removeEventListener('MozGamepadConnected', this.connectListener, false);
+      window.removeEventListener('MozGamepadDisconnected', this.disconnectListener, false);
     }
   };
 
