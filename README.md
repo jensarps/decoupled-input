@@ -9,8 +9,10 @@ Other benefits are:
 * Code gets more readable
 * Interpretation of input happens in the render loop
 * Boolean (button/key) and analog axis input can be handled by the same code
+* Easy setup of multiple bindings for one action
+* Gamepad support!
 
-decoupled-input comes with handlers for mouse and keyboard (and as soon as I have a gamepad successfully connected to my machine, a gamepad handler will follow).
+decoupled-input comes with handlers for mouse, keyboard and gamepad.
 
 
 #How It Works
@@ -24,8 +26,9 @@ An input setup looks like this:
 ~~~javascript
 
 var inputController = new InputController(bindings);
+inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
 inputController.registerDeviceHandler(MouseHandler, 'mouse');
-inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+inputController.registerDeviceHandler(KeyboardHandler, 'keyboard');
 
 var input = inputController.input; // this is where all input is stored
 
@@ -35,33 +38,6 @@ if(input.accelerate){
 }
 
 ~~~
-
-#Device Handlers
-
-_(For full example code and bindings please see the [Examples](#examples) section.)_
-
-Device handlers connect to events and feed values back to the controller. There are two handlers bundled, but you could easily write your own handlers.
-
-Device handlers must be passed to the controller instance's `registerDeviceHandler` method, along with the device name -- this device name must be the same string as the corresponding device name in the binding configuration.
-
-A device handler instance is available in the controller instance under it's device name property, e.g. to set handling options:
-
-~~~javascript
-
-inputController.registerDeviceHandler(MouseHandler, 'mouse');
-
-inputController.deviceHandlers.mouse.invertYAxis = true;
-
-~~~
-
-The mouse device handler has two configurable options that can be changed anytime (i.e. also during runtime):
-
-* infiniteXAxis
-* infiniteYAxis
-
-By default, both are set to false. The infinite[X/Y]Axis properties will change the reporting of an axis value from the default schema (-1..1) to a diff schema, i.e. the reported value will be the diff from the last measured position for that axis. This is especially useful for FPS-like input when pointer lock is enabled. For more info on this, refer to the Pointer Lock section.
-
-The First Person style example uses infiniteXAxis.
 
 #Bindings Configuration
 
@@ -80,6 +56,11 @@ var bindings = {
     up: true // if the controller should act on up state
   },
 
+  roll: {
+    device: 'gamepad', // the device name
+    inputId: 'axis-0', // the input id; see below for details
+  },
+
   fire: {
     device: 'mouse', // the device name
     inputId: 0, // which mouse button: left = 0, middle = 1, right = 2
@@ -90,7 +71,6 @@ var bindings = {
   pitch: {
     device: 'mouse', // the device name
     inputId: 'y' // axis input is either x or y
-    // no up/down properties need to be provided for axis bindings
     invert: true // if the axis should be inverted
   }
 }
@@ -99,10 +79,10 @@ var bindings = {
 
 An entry in the bindings object is an object itself, containing all information about the key/button/axis to be bound. The property name of the entry (e.g. "forward" in the example above) is where the corresponding input value can be found in the input object. In the example above, to check whether the key has been pressed, one would check for `input.forward`.
 
-Every entry must provide four properties (except for axis bindings, see below):
+Every entry consists of the following properties:
 
 * `device`: The device name, corresponding to the device name passed with the device handler
-* `inputId`: The key/button/axis to bind. For keyboard devices, pass the key code of the key, as found in the `keyCode` property in mousedown events. For mouse buttons, pass the button id: `0` for the left button, `1` for the middle button and `2` for the right button. For axis bindings, pass `'x'` or `'y'`.
+* `inputId`: The key/button/axis to bind. For keyboard devices, pass the key code of the key, as found in the `keyCode` property in mousedown events. For mouse buttons, pass the button id: `0` for the left button, `1` for the middle button and `2` for the right button. For mouse axis bindings, pass `'x'` or `'y'`. For gamepads, please see the [GamepadHandler](#gamepadhandler) section.
 * `down`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a downstate of the key/button. In most cases, this should be `true` (in fact, I can't really think of a scenario where you would want this to be false, but, hey, I don't know, so you can configure it).
 * `up`: [NOTE: Needs to be provided only for keys or buttons] Whether the input controller should react to a upstate of the key/button. In most cases, this should be `true`; except for bindings that are used to toggle something (see section [Toggle Buttons](#toggle-buttons) below for details).
 * `invert`: [NOTE: Not needed for keys or buttons] Whether the axis should be inverted. The fly example uses inverted y axis.
@@ -151,7 +131,7 @@ inputController.updateBindings(bindings);
 
 
 
-#The Input Object
+#The `Input` Object
 
 _(For full example code and bindings please see the [Examples](#examples) section.)_
 
@@ -184,6 +164,53 @@ The mouse device handler also adds two extra properties to the input object:
 Both values always carry the current mouse position, also in locked pointer mode. You can use these values, if you, e.g. are running your game in fullscreen with pointer lock enabled and still want to display a cursor.
 
 
+#Device Handlers
+
+_(For full example code and bindings please see the [Examples](#examples) section.)_
+
+Device handlers connect to events and feed values back to the controller. There are two handlers bundled, but you could easily write your own handlers.
+
+Device handlers must be passed to the controller instance's `registerDeviceHandler` method, along with the device name -- this device name must be the same string as the corresponding device name in the binding configuration.
+
+A device handler instance is available in the controller instance under it's device name property, e.g. to set handling options:
+
+~~~javascript
+
+inputController.registerDeviceHandler(MouseHandler, 'mouse');
+
+inputController.deviceHandlers.mouse.infiniteXAxis = true;
+
+~~~
+
+##GamepadHandler
+
+The gamepad device handler has one configurable option that can be changed anytime (i.e. also during runtime):
+
+* deadzone
+
+The deadzone is a threshold that describes when an alomost-centered stick should be reported as centered. Analog sticks are rarely exactly centered and constantly report minimal changes even if the user doesn't move it, and you don't want your logic to react to that. By default this value is set to `0.01`. This value should work fine in most cases.
+
+###Input IDs
+
+Analog and digital sticks, as well as buttons on gamepads are not normalized. Therefore, axis and button input ids are provided as strings in a numbered fashion. 
+
+Axes are provided like this: `'axis-0'`, `'axis-1'`, etc. and buttons like this: `'button-0'`, `'button-1'`, etc.
+
+On the Xbox 360 wired controller, the left analog stick feeds axes 0 and 1, with 0 being the x axis and 1 being the y axis. However, this does not have to be the case for other gamepads.
+
+
+##MouseHandler
+
+The mouse device handler has two configurable options that can be changed anytime (i.e. also during runtime):
+
+* infiniteXAxis
+* infiniteYAxis
+
+By default, both are set to false. The infinite[X/Y]Axis properties will change the reporting of an axis value from the default schema (-1..1) to a diff schema, i.e. the reported value will be the diff from the last measured position for that axis. This is especially useful for FPS-like input when pointer lock is enabled. For more info on this, refer to the Pointer Lock section.
+
+The First Person style example uses infiniteXAxis.
+
+
 #Examples
 
 There are three examples available to see how it works, along with three example bindings. All input handling logic happens in the `render` function. 
@@ -192,7 +219,7 @@ _Note that these examples are just meant to demonstrate how to work with binding
 
 * [First-Person style](http://jensarps.github.com/decoupled-input/example/example-first-person.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-first-person.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fps.js) -- This example uses `infiniteXAxis`
 * [Car style](http://jensarps.github.com/decoupled-input/example/example-car.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-car.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-car.js)
-* [Fly style](http://jensarps.github.com/decoupled-input/example/example-fly.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-fly.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fly.js) -- This example uses `invert: true` for it's y-axis.
+* [Fly style](http://jensarps.github.com/decoupled-input/example/example-fly.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-fly.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fly.js) -- This example uses `invert: true` for it's y-axis and has gamepad bindings.
 
 
 ## PointerLock / infinite[X/Y]Axis
@@ -238,6 +265,10 @@ if(input.toggleSomething){
 ~~~
 
 The reason for this is simple as well: when a user presses a button -- no matter how quick -- the time this takes will almost certainly cover multiple render loops. So if you don't reset yourself, your toggle logic will be executed over and over again, in every loop -- until the user releases the button.
+
+##Gamepad support
+
+The Gamepad API still is highly experimental. However, the fly example uses gamepad bindings and works fine with my setup: An Xbox 360 wired controller on Mac OSX Lion. Axis and button mappings are probably different for other controllers. If you encounter any issues with your gamepad, or have any observations or insights to share, don't hesitate to file a bug in the issue tracker.
 
 ##Dependecies
 
