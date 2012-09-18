@@ -39,12 +39,14 @@
             // the device handlers:
             '../src/Mouse',
             '../src/Keyboard',
+            '../src/Gamepad',
             // and the bindings file:
             'bindings-fly'
         ], function(
             InputController,
             MouseHandler,
             Keyboardhandler,
+            GamepadHandler,
             bindings
         ){
 
@@ -69,6 +71,7 @@
                 var inputController = new InputController(bindings);
                 inputController.registerDeviceHandler(MouseHandler, 'mouse');
                 inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+                inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
 
                 inputController.deviceHandlers.mouse.invertYAxis = true;
 
