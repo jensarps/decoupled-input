@@ -51,7 +51,7 @@ define(function () {
     },
 
     onGamepadDisconnect: function (evt) {
-      for (var i in this.gamepads) {
+      for (var i = this.gamepads - 1; i >= 0; i--) {
         if (this.gamepads[i].index == evt.gamepad.index) {
           this.gamepads.splice(i, 1);
           break;
