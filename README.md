@@ -135,6 +135,21 @@ var bindings = {
 
 The FPS example uses multiple assignments.
 
+##Updating the binding configuration
+
+To update the binding configuration during runtime, just call the controller's `updateBindings()` method with the new bindings:
+
+~~~javascript
+
+// user toggled y-axis inversion off
+bindings.pitch.invert = false;
+
+// now update the controller
+inputController.updateBindings(bindings);
+
+~~~
+
+
 
 #The Input Object
 

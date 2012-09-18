@@ -16,7 +16,7 @@ define(function () {
     setupBindings: function (bindings) {
       this.bindings = {};
       this.input = {};
-      
+
       Object.keys(bindings).forEach(function (description) {
         var binding = bindings[description],
             toString = ({}).toString;
@@ -33,6 +33,15 @@ define(function () {
         } else {
           this._applyBinding(binding, description);
         }
+      }, this);
+    },
+
+    updateBindings: function(bindings){
+      this.setupBindings(bindings);
+
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
+        this.deviceHandlers[deviceName].bindings = this.bindings[deviceName];
+        this.deviceHandlers[deviceName].input = this.input;
       }, this);
     },
 
