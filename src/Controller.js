@@ -40,7 +40,7 @@ define(function () {
       this.setupBindings(bindings);
 
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
-        this.deviceHandlers[deviceName].bindings = this.bindings[deviceName];
+        this.deviceHandlers[deviceName].bindings = this.bindings[deviceName] || {};
         this.deviceHandlers[deviceName].input = this.input;
       }, this);
     },
@@ -58,7 +58,7 @@ define(function () {
     },
 
     registerDeviceHandler: function (DeviceHandler, deviceName) {
-      this.deviceHandlers[deviceName] = new DeviceHandler(this.bindings[deviceName], this.input);
+      this.deviceHandlers[deviceName] = new DeviceHandler(this.bindings[deviceName] || {}, this.input);
     },
 
     destroy: function () {
