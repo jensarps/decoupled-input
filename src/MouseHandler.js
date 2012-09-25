@@ -47,6 +47,13 @@ define(function(){
         ( document.pointerLockEnabled ? evt.movementY : mouseY - this.input.mouseY ) :
         -( mouseY - halfHeight ) / halfHeight;
 
+      if(this.isDetecting){
+        var diffX = Math.abs(this.input.mouseX - mouseX);
+        var diffY = Math.abs(this.input.mouseY - mouseY);
+        this._detectCallback('mouse', diffX > diffY ? 'x' : 'y');
+        return;
+      }
+
       this.input.mouseX = mouseX;
       this.input.mouseY = mouseY;
 
@@ -61,6 +68,10 @@ define(function(){
     },
 
     onMouseDown: function(evt){
+      if(this.isDetecting){
+        this._detectCallback('mouse', evt.button);
+        return;
+      }
       if(evt.button in this.bindings){
         var binding = this.bindings[evt.button];
         if(binding.down){
@@ -70,6 +81,9 @@ define(function(){
     },
 
     onMouseUp: function(evt){
+      if(this.isDetecting){
+        return;
+      }
       if(evt.button in this.bindings){
         var binding = this.bindings[evt.button];
         if(binding.up){
@@ -93,6 +107,17 @@ define(function(){
       document.removeEventListener('mouseup', this.upListener, false);
       document.removeEventListener('contextmenu', this.ctxListener, false);
       window.removeEventListener('resize', this.resizeListener, false);
+    },
+
+    /* detection methods */
+    startDetecting: function(callback){
+      this._detectCallback = callback;
+      this.isDetecting = true;
+    },
+
+    stopDetecting: function(){
+      delete this._detectCallback;
+      this.isDetecting = false;
     }
   };
 

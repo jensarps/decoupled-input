@@ -65,6 +65,23 @@ define(function () {
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         this.deviceHandlers[deviceName].destroy();
       }, this);
+    },
+
+    /* detection methods */
+    startDetecting: function(callback){
+      var detected = this.detectedInputs = [];
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
+        this.deviceHandlers[deviceName].startDetecting(function(deviceName, inputId){
+          detected.push([+new Date(), deviceName, inputId]);
+          callback(deviceName, inputId);
+        });
+      }, this);
+    },
+
+    stopDetecting: function(){
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
+        this.deviceHandlers[deviceName].stopDetecting();
+      }, this);
     }
 
   };

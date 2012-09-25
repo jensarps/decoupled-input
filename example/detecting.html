@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decoupled Input -- Detecting Input</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        #info {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            font-family: monospace;
+        }
+        #vis {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-family: sans-serif;
+        }
+        #vis.hidden {
+            display: none;
+        }
+        #steering {
+            margin: 20px 0;
+            border: solid 1px gray;
+            position: relative;
+            width: 100px;
+            height: 17px;
+            padding-right: 3px;
+        }
+        #steering span {
+            position: absolute;
+            top: 0;
+            left: 50%;
+        }
+        .input-active {
+            color: green;
+        }
+
+        #binding-assign {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-family: sans-serif;
+        }
+        #binding-assign div {
+            padding: 10px 0 0 10px;
+            overflow: hidden;
+        }
+        button {
+            float: right;
+            margin: 0 0 0 5px;
+        }
+
+        #overlay {
+            background: rgba(0,0,0,0.7);
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            color: #FFFFFF;
+            display: none;
+            z-index: 10;
+        }
+        #overlay div {
+            position: relative;
+            top: 50%;
+        }
+
+    </style>
+    <script src="Three.js"></script>
+    <script src="require.js"></script>
+    <script src="game-shim.js"></script>
+</head>
+<body>
+    <div id="overlay">
+    </div>
+    <div id="info">
+        Decoupled Input -- Detecting Input
+    </div>
+    <div id="vis">
+        <div id="accel">Accelerate</div>
+        <div id="brake">Brake</div>
+        <div id="boost">Boost</div>
+        <div id="steering"><span>|</span></div>
+    </div>
+    <div id="binding-assign">
+        Re-Assign inputs:
+        <div id="accelerate-assign">Accel: <span>keyboard, 87</span><button onclick="reassign('accelerate')">Re-Assign</button></div>
+        <div id="brake-assign">Brake: <span>keyboard, 83</span><button onclick="reassign('brake')">Re-Assign</button></div>
+        <div id="boost-assign">Boost: <span>mouse, 0</span><button onclick="reassign('boost')">Re-Assign</button></div>
+        <div id="steering-assign">Steering: <span>mouse, x</span><button onclick="reassign('steering')">Re-Assign</button></div>
+    </div>
+    <script type="text/javascript">
+
+        // require controller files...
+        require([
+            // the controller itself:
+            '../src/InputController',
+            // the device handlers:
+            '../src/MouseHandler',
+            '../src/KeyboardHandler',
+            '../src/GamepadHandler',
+            // and the bindings file:
+            'bindings-car'
+        ], function(
+            InputController,
+            MouseHandler,
+            Keyboardhandler,
+            GamepadHandler,
+            bindings
+        ){
+
+            var camera, scene, renderer;
+            var SCREEN_HEIGHT = window.innerHeight;
+            var SCREEN_WIDTH = window.innerWidth;
+
+            var inputController;
+            var input; // this is where we will put input data into.
+
+            var speed = 0,
+                steering = 0;
+
+            var visualisationNodes;
+
+            // go:
+            init();
+            render();
+
+            function init () {
+
+                /* Input */
+                inputController = new InputController(bindings);
+                inputController.registerDeviceHandler(MouseHandler, 'mouse');
+                inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+                inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
+
+                // this is where we can read input data from:
+                input = inputController.input;
+
+                /* Scene & Camera */
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(25, SCREEN_WIDTH / SCREEN_HEIGHT);
+                camera.position.y = 10;
+                scene.add(camera);
+
+                /* Renderer */
+                renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                document.body.appendChild(renderer.domElement);
+
+                /* Lights */
+                var ambientLight = new THREE.AmbientLight(0x606060);
+                scene.add(ambientLight);
+
+                /* Ground */
+                var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10, 10), new THREE.MeshBasicMaterial({ color: 0x808080, wireframe: true }));
+                scene.add(plane);
+
+                window.addEventListener('resize', onResize, false);
+            }
+
+            function render (delta) {
+
+                requestAnimationFrame(render);
+
+                visualizeInput();
+
+                speed += (input.accelerate - input.brake) / 50;
+                speed = THREE.Math.clamp(speed, -0.5, 1);
+
+                if (input.boost) {
+                    speed *= 1.5;
+                }
+
+                camera.translateZ(-speed);
+
+                camera.rotation.y += input.steering / 100 * speed;
+
+                if(input.toggleSomething){
+                    visualisationNodes.wrapper.classList.toggle('hidden');
+                    input.toggleSomething = false;
+                }
+
+                renderer.render(scene, camera);
+
+            }
+
+            function visualizeInput () {
+                if(!visualisationNodes){
+                    visualisationNodes = {
+                        wrapper: document.getElementById('vis'),
+                        steering: document.getElementById('steering').firstChild,
+                        accelerate: document.getElementById('accel'),
+                        brake: document.getElementById('brake'),
+                        boost: document.getElementById('boost')
+                    };
+                }
+                visualisationNodes.steering.style.left = ( input.steering * -50 + 50 ) + 'px';
+                visualisationNodes.accelerate.className = input.accelerate ? 'input-active' : '';
+                visualisationNodes.brake.className = input.brake ? 'input-active' : '';
+                visualisationNodes.boost.className = input.boost ? 'input-active' : '';
+            }
+
+            function onResize(){
+                SCREEN_HEIGHT = window.innerHeight;
+                SCREEN_WIDTH = window.innerWidth;
+                renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+                camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+                camera.updateProjectionMatrix();
+            }
+
+
+            function reassign(binding){
+                var overlay = document.getElementById('overlay');
+                overlay.style.display = 'block';
+                overlay.innerHTML = '<div>Activate the button/key/axis you want to bind to "' + binding + '"...</div>';
+
+                // initiate the detecting:
+                inputController.startDetecting(function(deviceName, inputId){
+
+                    // stop detecting
+                    inputController.stopDetecting();
+
+                    // apply the new bindings
+                    bindings[binding].device = deviceName;
+                    bindings[binding].inputId = inputId;
+
+                    // update the controller
+                    inputController.updateBindings(bindings);
+
+                    // update the reference to the new input object
+                    input = inputController.input;
+
+                    overlay.style.display = 'none';
+                    document.getElementById(binding + '-assign').getElementsByTagName('span')[0].innerHTML = deviceName + ', ' + inputId;
+                });
+            }
+
+            // expose reassign() to global
+            window.reassign = reassign;
+        });
+
+
+    </script>
+</body>
+</html>

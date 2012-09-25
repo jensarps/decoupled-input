@@ -14,6 +14,7 @@ define(function () {
     this.prevRawGamepadTypes = [];
     this.prevTimestamps = [];
     this.buttonStates = [];
+    this.axisValues = [];
     
     this.init();
   };
@@ -23,6 +24,8 @@ define(function () {
     deadzone: 0.01,
 
     buttonStates: null,
+
+    axisValues: null,
 
     gamepads: null,
 
@@ -119,12 +122,19 @@ define(function () {
         if (gamepadsChanged) {
 
           this.buttonStates.length = 0;
+          this.axisValues.length = 0;
 
           for(i= 0, m=this.gamepads.length; i<m; i++){
             var gamepad = this.gamepads[i];
+
             var states = this.buttonStates[i] = [];
             gamepad.buttons.forEach(function(initialValue, index){
               states[index] = initialValue;
+            }, this);
+
+            var values = this.axisValues[i] = [];
+            gamepad.axes.forEach(function(initialValue, index){
+              values[index] = Math.abs(initialValue) > this.deadzone ? initialValue : 0;
             }, this);
           }
 
@@ -136,6 +146,7 @@ define(function () {
 
       var gamepad = this.gamepads[gamepadId];
       var states = this.buttonStates[gamepadId];
+      var values = this.axisValues[gamepadId];
 
       var i, m,binding;
 
@@ -145,34 +156,62 @@ define(function () {
         var buttonId = 'button-' + i;
 
         if(oldValue != currentValue ){
-          var type = currentValue > oldValue ? 'down' : 'up';
-          states[i] = currentValue;
 
-          if(buttonId in this.bindings){
-            binding = this.bindings[buttonId];
-            if(binding[type]){
-              this.input[binding.description] = currentValue;
+          if(this.isDetecting){
+            this._detectCallback('gamepad', buttonId);
+          } else {
+            var type = currentValue > oldValue ? 'down' : 'up';
+
+            if(buttonId in this.bindings){
+              binding = this.bindings[buttonId];
+              if(binding[type]){
+                this.input[binding.description] = currentValue;
+              }
             }
           }
+          states[i] = currentValue;
+
         }
       }
 
       for(i = 0, m=gamepad.axes.length; i<m; i++){
-        var axisId = 'axis-' + i;
-        if(axisId in this.bindings){
-          binding = this.bindings[axisId];
-          var value = gamepad.axes[i];
-          if(binding.invert){
-            value *= -1;
-          }
-          this.input[binding.description] = Math.abs(value) > this.deadzone ? value : 0;
+
+        var value = gamepad.axes[i];
+        if(Math.abs(value) <= this.deadzone){
+          value = 0;
         }
+        var axisId = 'axis-' + i;
+
+        if(this.isDetecting && values[i] != value){
+          this._detectCallback('gamepad', axisId);
+        } else {
+          if(axisId in this.bindings){
+            binding = this.bindings[axisId];
+            if(binding.invert){
+              value *= -1;
+            }
+            this.input[binding.description] = value;
+          }
+        }
+        values[i] = value;
+
       }
     },
 
     destroy: function(){
       window.removeEventListener('MozGamepadConnected', this.connectListener, false);
       window.removeEventListener('MozGamepadDisconnected', this.disconnectListener, false);
+    },
+
+    /* detection methods */
+    startDetecting: function(callback){
+      this._detectCallback = callback;
+      this.isDetecting = true;
+    },
+
+    stopDetecting: function(){
+      delete this._detectCallback;
+      this.isDetecting = false;
     }
   };
 
