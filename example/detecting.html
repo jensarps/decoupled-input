@@ -215,12 +215,21 @@
 
 
             function reassign(binding){
+                // steering needs to be an axis, the rest need to be buttons
+                var needsAxis = binding == 'steering';
+
+                // show overlay
                 var overlay = document.getElementById('overlay');
                 overlay.style.display = 'block';
-                overlay.innerHTML = '<div>Activate the button/key/axis you want to bind to "' + binding + '"...</div>';
+                overlay.innerHTML = '<div>Activate the ' + (needsAxis ? 'axis' : 'button') + ' you want to bind to "' + binding + '"...</div>';
 
                 // initiate the detecting:
                 inputController.startDetecting(function(evt){
+
+                    if(needsAxis != evt.isAxis){
+                        // not the appropriate type; try again.
+                        return;
+                    }
 
                     // stop detecting
                     inputController.stopDetecting();
@@ -235,6 +244,7 @@
                     // update the reference to the new input object
                     input = inputController.input;
 
+                    // hide overlay and display new binding
                     overlay.style.display = 'none';
                     document.getElementById(binding + '-assign').getElementsByTagName('span')[0].innerHTML = evt.device + ', ' + evt.inputId;
                 });
