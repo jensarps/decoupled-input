@@ -14,7 +14,10 @@ define(function(){
 
     onKeyDown: function(evt){
       if(this.isDetecting){
-        this._detectCallback('keyboard', evt.keyCode);
+        this._detectCallback({
+          device: 'keyboard',
+          inputId: evt.keyCode
+        });
         return;
       }
       if(evt.keyCode in this.bindings){

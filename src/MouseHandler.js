@@ -50,7 +50,10 @@ define(function(){
       if(this.isDetecting){
         var diffX = Math.abs(this.input.mouseX - mouseX);
         var diffY = Math.abs(this.input.mouseY - mouseY);
-        this._detectCallback('mouse', diffX > diffY ? 'x' : 'y');
+        this._detectCallback({
+          device: 'mouse',
+          inputId: diffX > diffY ? 'x' : 'y'
+        });
         return;
       }
 
@@ -69,7 +72,10 @@ define(function(){
 
     onMouseDown: function(evt){
       if(this.isDetecting){
-        this._detectCallback('mouse', evt.button);
+        this._detectCallback({
+          device: 'mouse',
+          inputId: evt.button
+        });
         return;
       }
       if(evt.button in this.bindings){
