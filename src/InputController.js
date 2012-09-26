@@ -71,14 +71,10 @@ define(function () {
     startDetecting: function(callback){
       var detected = this.detectedInputs = [];
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
-        this.deviceHandlers[deviceName].startDetecting(function(deviceName, inputId){
-          var eventObj = {
-            device: deviceName,
-            inputId: inputId,
-            timestamp: Date.now()
-          };
-          detected.push([+new Date(), deviceName, inputId]);
-          callback(eventObj);
+        this.deviceHandlers[deviceName].startDetecting(function(evt){
+          evt.timestamp = Date.now();
+          detected.push([+new Date(), evt.device, evt.inputId]);
+          callback(evt);
         });
       }, this);
     },
