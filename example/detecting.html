@@ -236,7 +236,7 @@
                     input = inputController.input;
 
                     overlay.style.display = 'none';
-                    document.getElementById(binding + '-assign').getElementsByTagName('span')[0].innerHTML = deviceName + ', ' + inputId;
+                    document.getElementById(binding + '-assign').getElementsByTagName('span')[0].innerHTML = evt.device + ', ' + evt.inputId;
                 });
             }
 
