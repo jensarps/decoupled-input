@@ -220,14 +220,14 @@
                 overlay.innerHTML = '<div>Activate the button/key/axis you want to bind to "' + binding + '"...</div>';
 
                 // initiate the detecting:
-                inputController.startDetecting(function(deviceName, inputId){
+                inputController.startDetecting(function(evt){
 
                     // stop detecting
                     inputController.stopDetecting();
 
                     // apply the new bindings
-                    bindings[binding].device = deviceName;
-                    bindings[binding].inputId = inputId;
+                    bindings[binding].device = evt.device;
+                    bindings[binding].inputId = evt.inputId;
 
                     // update the controller
                     inputController.updateBindings(bindings);
