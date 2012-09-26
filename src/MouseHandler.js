@@ -52,7 +52,8 @@ define(function(){
         var diffY = Math.abs(this.input.mouseY - mouseY);
         this._detectCallback({
           device: 'mouse',
-          inputId: diffX > diffY ? 'x' : 'y'
+          inputId: diffX > diffY ? 'x' : 'y',
+          isAxis: true
         });
         return;
       }
@@ -74,7 +75,8 @@ define(function(){
       if(this.isDetecting){
         this._detectCallback({
           device: 'mouse',
-          inputId: evt.button
+          inputId: evt.button,
+          isAxis: false
         });
         return;
       }

@@ -160,7 +160,8 @@ define(function () {
           if(this.isDetecting){
             this._detectCallback({
               device: 'gamepad',
-              inputId: buttonId
+              inputId: buttonId,
+              isAxis: false
             });
           } else {
             var type = currentValue > oldValue ? 'down' : 'up';
@@ -188,7 +189,8 @@ define(function () {
         if(this.isDetecting && values[i] != value){
           this._detectCallback({
             device: 'gamepad',
-            inputId: axisId
+            inputId: axisId,
+            isAxis: true
           });
         } else {
           if(axisId in this.bindings){

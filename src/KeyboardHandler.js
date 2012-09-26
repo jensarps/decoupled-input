@@ -16,7 +16,8 @@ define(function(){
       if(this.isDetecting){
         this._detectCallback({
           device: 'keyboard',
-          inputId: evt.keyCode
+          inputId: evt.keyCode,
+          isAxis: false
         });
         return;
       }
