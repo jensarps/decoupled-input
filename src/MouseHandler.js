@@ -30,9 +30,16 @@ define(function(){
           width = this.width,
           halfWidth = width / 2,
           height = this.height,
-          halfHeight = height / 2;
+          halfHeight = height / 2,
+          hasMovementProp = typeof evt.movementX != 'undefined';
 
-      if(document.pointerLockEnabled){
+      if(!this._initialized){
+        this.input.mouseX = evt.pageX - ( hasMovementProp ? evt.movementX : 0 );
+        this.input.mouseY = evt.pageY - ( hasMovementProp ? evt.movementY : 0 );
+        this._initialized = true;
+      }
+
+      if(hasMovementProp){
         mouseX = this.clamp(0, width, this.input.mouseX + evt.movementX);
         mouseY = this.clamp(0, height, this.input.mouseY + evt.movementY);
       }else{
@@ -41,10 +48,10 @@ define(function(){
       }
 
       x = this.infiniteXAxis ?
-        ( document.pointerLockEnabled ? evt.movementX : mouseX - this.input.mouseX ) :
+        ( hasMovementProp ? evt.movementX : mouseX - this.input.mouseX ) :
         -( mouseX - halfWidth  ) / halfWidth;
       y = this.infiniteYAxis ?
-        ( document.pointerLockEnabled ? evt.movementY : mouseY - this.input.mouseY ) :
+        ( hasMovementProp ? evt.movementY : mouseY - this.input.mouseY ) :
         -( mouseY - halfHeight ) / halfHeight;
 
       this.input.mouseX = mouseX;
