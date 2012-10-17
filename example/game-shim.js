@@ -1,11 +1,11 @@
 /**
  * @fileoverview game-shim - Shims to normalize gaming-related APIs to their respective specs
  * @author Brandon Jones
- * @version 0.5
+ * @version 0.9
  */
 
 /*
- * Copyright (c) 2011 Brandon Jones
+ * Copyright (c) 2012 Brandon Jones
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -37,7 +37,8 @@
         supports: {
             fullscreen: true,
             pointerLock: true,
-            gamepad: true
+            gamepad: true,
+            highResTimer: true
         }
     };
     
@@ -102,15 +103,15 @@
     // Fullscreen
     //=====================
     
-    // document.isFullScreen
+    // document.fullscreenEnabled
     if(!document.hasOwnProperty("fullscreenEnabled")) {
         getter = (function() {
             // These are the functions that match the spec, and should be preferred
             if("webkitIsFullScreen" in document) {
-                return function() { return document.webkitIsFullScreen; };
+                return function() { return webkitRequestFullScreen in document; };
             }
-            if("mozFullScreen" in document) {
-                return function() { return document.mozFullScreen; };
+            if("mozFullScreenEnabled" in document) {
+                return function() { return document.mozFullScreenEnabled; };
             }
 
             GameShim.supports.fullscreen = false;
@@ -126,11 +127,13 @@
     if(!document.hasOwnProperty("fullscreenElement")) {
         getter = (function() {
             // These are the functions that match the spec, and should be preferred
-            if("webkitFullscreenElement" in document) {
-                return function() { return document.webkitFullscreenElement; };
-            }
-            if("mozFullscreenElement" in document) {
-                return function() { return document.mozFullscreenElement; };
+            var i=0, name=["webkitCurrentFullScreenElement", "webkitFullscreenElement", "mozFullScreenElement"];
+            for (; i<name.length; i++)
+            {
+                if (name[i] in document)
+                {
+                    return function() { return document[name[i]]; };
+                }
             }
             return function() { return null; }; // not supported
         })();
@@ -162,8 +165,8 @@
     document.addEventListener("mozfullscreenerror", fullscreenerror, false);
     
     // element.requestFullScreen
-    if(!elementPrototype.requestFullScreen) {
-        elementPrototype.requestFullScreen = (function() {
+    if(!elementPrototype.requestFullscreen) {
+        elementPrototype.requestFullscreen = (function() {
             if(elementPrototype.webkitRequestFullScreen) {
                 return function() {
                     this.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
@@ -184,7 +187,7 @@
     if(!document.exitFullscreen) {
         document.exitFullscreen = (function() {
             return  document.webkitExitFullscreen ||
-                    document.mozExitFullscreen ||
+                    document.mozCancelFullScreen ||
                     function(){ /* unsupported, fail silently */ };
         })();
     }
@@ -234,41 +237,6 @@
     }
     document.addEventListener("webkitpointerlockerror", pointerlockerror, false);
     document.addEventListener("mozpointerlockerror", pointerlockerror, false);
-
-    // document.pointerLockEnabled
-    if(!document.hasOwnProperty("pointerLockEnabled")) {
-        getter = (function() {
-            // These are the functions that match the spec, and should be preferred
-            if("webkitPointerLockEnabled" in document) {
-                return function() { return document.webkitPointerLockEnabled; };
-            }
-            if("mozPointerLockEnabled" in document) {
-                return function() { return document.mozPointerLockEnabled; };
-            }
-    
-            // Early versions of the spec managed mouselock through the pointer object
-            if(navigator.pointer) {
-                if(typeof(navigator.pointer.isLocked) === "boolean") {
-                    // Chrome initially launched with this interface
-                    return function() { return navigator.pointer.isLocked; };
-                } else if(typeof(navigator.pointer.isLocked) === "function") {
-                    // Some older builds might provide isLocked as a function
-                    return function() { return navigator.pointer.isLocked(); };
-                } else if(typeof(navigator.pointer.islocked) === "function") {
-                    // For compatibility with early Firefox build
-                    return function() { return navigator.pointer.islocked(); };
-                }
-            }
-
-            GameShim.supports.pointerLock = false;
-            return function() { return false; }; // not supported, never locked
-        })();
-        
-        Object.defineProperty(document, "pointerLockEnabled", {
-            enumerable: true, configurable: false, writeable: false,
-            get: getter
-        });
-    }
     
     if(!document.hasOwnProperty("pointerLockElement")) {
         getter = (function() {
@@ -279,7 +247,6 @@
             if("mozPointerLockElement" in document) {
                 return function() { return document.mozPointerLockElement; };
             }
-            
             return function() { return null; }; // not supported
         })();
         
@@ -292,14 +259,28 @@
     // element.requestPointerLock
     if(!elementPrototype.requestPointerLock) {
         elementPrototype.requestPointerLock = (function() {
-            return  elementPrototype.webkitRequestPointerLock ||
-                    elementPrototype.mozRequestPointerLock    ||
-                    function(){
-                        if(navigator.pointer) {
-                            var elem = this;
-                            navigator.pointer.lock(elem, pointerlockchange, pointerlockerror);
-                        }
-                    };
+            if(elementPrototype.webkitRequestPointerLock) {
+                return function() {
+                    this.webkitRequestPointerLock();
+                };
+            }
+
+            if(elementPrototype.mozRequestPointerLock) {
+                return function() {
+                    this.mozRequestPointerLock();
+                };
+            }
+
+            if(navigator.pointer) {
+                return function() {
+                    var elem = this;
+                    navigator.pointer.lock(elem, pointerlockchange, pointerlockerror);
+                };
+            }
+
+            GameShim.supports.pointerLock = false;
+
+            return function(){}; // not supported
         })();
     }
     
@@ -340,6 +321,36 @@
             enumerable: true, configurable: false, writeable: false,
             get: getter
         });
+    }
+
+    //=======================
+    // High Resolution Timer
+    //=======================
+
+    if(!window.performance) {
+        window.performance = {};
+    }
+
+    if(!window.performance.timing) {
+        window.performance.timing = {
+            navigationStart: Date.now() // Terrible approximation, I know. Sorry.
+        };
+    }
+
+    if(!window.performance.now) {
+        window.performance.now = (function() {
+            // FYI: Mozilla supports high-res timers without prefixes.
+
+            if(window.performance.webkitNow) {
+                return window.performance.webkitNow;
+            }
+
+            GameShim.supports.highResTimer = false;
+
+            return function(){ // not supported, return a low-resolution approximation
+                return Date.now() - window.performance.timing.navigationStart;
+            };
+        })();
     }
     
 })((typeof(exports) != 'undefined') ? global : window); // Account for CommonJS environments
