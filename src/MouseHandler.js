@@ -7,6 +7,21 @@ define(function(){
     this.input.mouseX = 0;
     this.input.mouseY = 0;
 
+    var hasPointerLockSupport = false;
+    var pointerLockElementProperty = null;
+    [
+      "webkitPointerLockElement",
+      "mozPointerLockElement",
+      "pointerLockElement"
+    ].forEach(function(propName){
+      if(propName in document){
+        hasPointerLockSupport = true;
+        pointerLockElementProperty = propName
+      }
+    }, this);
+    this.hasPointerLockSupport = hasPointerLockSupport;
+    this.pointerLockElementProperty = pointerLockElementProperty;
+
     document.addEventListener('mousemove', ( this.moveListener = this.onMouseMove.bind(this) ), false);
     document.addEventListener('mousedown', ( this.downListener = this.onMouseDown.bind(this) ), false);
     document.addEventListener('mouseup', ( this.upListener = this.onMouseUp.bind(this) ), false);
@@ -16,6 +31,10 @@ define(function(){
   };
 
   MouseHandler.prototype = {
+
+    hasPointerLockSupport: null,
+
+    pointerLockElementProperty: null,
 
     infiniteXAxis: false,
 
@@ -31,7 +50,7 @@ define(function(){
           halfWidth = width / 2,
           height = this.height,
           halfHeight = height / 2,
-          hasMovementProp = typeof evt.movementX != 'undefined';
+          hasMovementProp = this.hasPointerLockSupport && document[this.pointerLockElementProperty] != null;
 
       if(!this._initialized){
         this.input.mouseX = evt.pageX - ( hasMovementProp ? evt.movementX : 0 );
