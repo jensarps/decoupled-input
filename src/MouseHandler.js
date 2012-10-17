@@ -50,15 +50,15 @@ define(function(){
           halfWidth = width / 2,
           height = this.height,
           halfHeight = height / 2,
-          hasMovementProp = this.hasPointerLockSupport && document[this.pointerLockElementProperty] != null;
+          isPointerLocked = this.hasPointerLockSupport && document[this.pointerLockElementProperty] != null;
 
       if(!this._initialized){
-        this.input.mouseX = evt.pageX - ( hasMovementProp ? evt.movementX : 0 );
-        this.input.mouseY = evt.pageY - ( hasMovementProp ? evt.movementY : 0 );
+        this.input.mouseX = evt.pageX - ( isPointerLocked ? evt.movementX : 0 );
+        this.input.mouseY = evt.pageY - ( isPointerLocked ? evt.movementY : 0 );
         this._initialized = true;
       }
 
-      if(hasMovementProp){
+      if(isPointerLocked){
         mouseX = this.clamp(0, width, this.input.mouseX + evt.movementX);
         mouseY = this.clamp(0, height, this.input.mouseY + evt.movementY);
       }else{
@@ -67,10 +67,10 @@ define(function(){
       }
 
       x = this.infiniteXAxis ?
-        ( hasMovementProp ? evt.movementX : mouseX - this.input.mouseX ) :
+        ( isPointerLocked ? evt.movementX : mouseX - this.input.mouseX ) :
         -( mouseX - halfWidth  ) / halfWidth;
       y = this.infiniteYAxis ?
-        ( hasMovementProp ? evt.movementY : mouseY - this.input.mouseY ) :
+        ( isPointerLocked ? evt.movementY : mouseY - this.input.mouseY ) :
         -( mouseY - halfHeight ) / halfHeight;
 
       this.input.mouseX = mouseX;
