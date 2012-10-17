@@ -67,19 +67,22 @@ define(function(){
         this._initialized = true;
       }
 
+      var movementX = evt[this.movementProperty + 'X'];
+      var movementY = evt[this.movementProperty + 'Y'];
+
       if(isPointerLocked){
-        mouseX = this.clamp(0, width, this.input.mouseX + evt[this.movementProperty + 'X']);
-        mouseY = this.clamp(0, height, this.input.mouseY + evt[this.movementProperty + 'Y']);
+        mouseX = this.clamp(0, width, this.input.mouseX + movementX);
+        mouseY = this.clamp(0, height, this.input.mouseY + movementY);
       }else{
         mouseX = evt.pageX;
         mouseY = evt.pageY;
       }
 
       x = this.infiniteXAxis ?
-        ( isPointerLocked ? evt[this.movementProperty + 'X'] : mouseX - this.input.mouseX ) :
+        ( isPointerLocked ? movementX : mouseX - this.input.mouseX ) :
         -( mouseX - halfWidth  ) / halfWidth;
       y = this.infiniteYAxis ?
-        ( isPointerLocked ? evt[this.movementProperty + 'Y'] : mouseY - this.input.mouseY ) :
+        ( isPointerLocked ? movementY : mouseY - this.input.mouseY ) :
         -( mouseY - halfHeight ) / halfHeight;
 
       this.input.mouseX = mouseX;
