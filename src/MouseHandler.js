@@ -7,6 +7,21 @@ define(function(){
     this.input.mouseX = 0;
     this.input.mouseY = 0;
 
+    var hasPointerLockSupport = false;
+    var pointerLockElementProperty = null;
+    [
+      "webkitPointerLockElement",
+      "mozPointerLockElement",
+      "pointerLockElement"
+    ].forEach(function(propName){
+      if(propName in document){
+        hasPointerLockSupport = true;
+        pointerLockElementProperty = propName
+      }
+    }, this);
+    this.hasPointerLockSupport = hasPointerLockSupport;
+    this.pointerLockElementProperty = pointerLockElementProperty;
+
     document.addEventListener('mousemove', ( this.moveListener = this.onMouseMove.bind(this) ), false);
     document.addEventListener('mousedown', ( this.downListener = this.onMouseDown.bind(this) ), false);
     document.addEventListener('mouseup', ( this.upListener = this.onMouseUp.bind(this) ), false);
@@ -16,6 +31,12 @@ define(function(){
   };
 
   MouseHandler.prototype = {
+
+    hasPointerLockSupport: false,
+
+    pointerLockElementProperty: '',
+
+    movementProperty: '',
 
     infiniteXAxis: false,
 
@@ -30,21 +51,38 @@ define(function(){
           width = this.width,
           halfWidth = width / 2,
           height = this.height,
-          halfHeight = height / 2;
+          halfHeight = height / 2,
+          isPointerLocked = this.hasPointerLockSupport && document[this.pointerLockElementProperty] != null;
 
-      if(document.pointerLockEnabled){
-        mouseX = this.clamp(0, width, this.input.mouseX + evt.movementX);
-        mouseY = this.clamp(0, height, this.input.mouseY + evt.movementY);
+      if(!this._initialized){
+
+        ["webkitMovement", "mozMovement", "movement"].forEach(function(propName){
+          if(propName + 'X' in evt){
+            this.movementProperty = propName;
+          }
+        }, this);
+
+        this.input.mouseX = evt.pageX - ( isPointerLocked ? evt[this.movementProperty + 'X'] : 0 );
+        this.input.mouseY = evt.pageY - ( isPointerLocked ? evt[this.movementProperty + 'Y'] : 0 );
+        this._initialized = true;
+      }
+
+      var movementX = evt[this.movementProperty + 'X'];
+      var movementY = evt[this.movementProperty + 'Y'];
+
+      if(isPointerLocked){
+        mouseX = this.clamp(0, width, this.input.mouseX + movementX);
+        mouseY = this.clamp(0, height, this.input.mouseY + movementY);
       }else{
         mouseX = evt.pageX;
         mouseY = evt.pageY;
       }
 
       x = this.infiniteXAxis ?
-        ( document.pointerLockEnabled ? evt.movementX : mouseX - this.input.mouseX ) :
+        ( isPointerLocked ? movementX : mouseX - this.input.mouseX ) :
         -( mouseX - halfWidth  ) / halfWidth;
       y = this.infiniteYAxis ?
-        ( document.pointerLockEnabled ? evt.movementY : mouseY - this.input.mouseY ) :
+        ( isPointerLocked ? movementY : mouseY - this.input.mouseY ) :
         -( mouseY - halfHeight ) / halfHeight;
 
       this.input.mouseX = mouseX;
