@@ -170,7 +170,7 @@ Both values always carry the current mouse position, also in locked pointer mode
 
 _(For full example code and bindings please see the [Examples](#examples) section.)_
 
-Device handlers connect to events and feed values back to the controller. There are two handlers bundled, but you could easily write your own handlers.
+Device handlers connect to events and feed values back to the controller. There are three handlers bundled, but you could easily write your own handlers.
 
 Device handlers must be passed to the controller instance's `registerDeviceHandler` method, along with the device name -- this device name must be the same string as the corresponding device name in the binding configuration.
 
