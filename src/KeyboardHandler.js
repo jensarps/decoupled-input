@@ -10,7 +10,17 @@ define(function(){
 
   KeyboardHandler.prototype = {
 
+    isDetecting: false,
+
     onKeyDown: function(evt){
+      if(this.isDetecting){
+        this._detectCallback({
+          device: 'keyboard',
+          inputId: evt.keyCode,
+          isAxis: false
+        });
+        return;
+      }
       if(evt.keyCode in this.bindings){
         var binding = this.bindings[evt.keyCode];
         if(binding.down){
@@ -20,6 +30,9 @@ define(function(){
     },
 
     onKeyUp: function(evt){
+      if(this.isDetecting){
+        return;
+      }
       if(evt.keyCode in this.bindings){
         var binding = this.bindings[evt.keyCode];
         if(binding.up){
@@ -32,6 +45,7 @@ define(function(){
       document.removeEventListener('keyup', this.upListener, false);
       document.removeEventListener('keydown', this.downListener, false);
     }
+
   };
 
   return KeyboardHandler;

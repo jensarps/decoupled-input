@@ -65,6 +65,28 @@ define(function () {
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         this.deviceHandlers[deviceName].destroy();
       }, this);
+    },
+
+    /* detection methods */
+    startDetecting: function (callback) {
+      var detectCallback = function (evt) {
+        evt.timestamp = Date.now();
+        callback(evt);
+      };
+
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
+        var deviceHandler = this.deviceHandlers[deviceName];
+        deviceHandler._detectCallback = detectCallback;
+        deviceHandler.isDetecting = true;
+      }, this);
+    },
+
+    stopDetecting: function(){
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
+        var deviceHandler = this.deviceHandlers[deviceName];
+        deviceHandler._detectCallback = null;
+        deviceHandler.isDetecting = false;
+      }, this);
     }
 
   };
