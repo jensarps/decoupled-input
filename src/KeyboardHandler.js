@@ -44,18 +44,8 @@ define(function(){
     destroy: function(){
       document.removeEventListener('keyup', this.upListener, false);
       document.removeEventListener('keydown', this.downListener, false);
-    },
-
-    /* detection methods */
-    startDetecting: function(callback){
-      this._detectCallback = callback;
-      this.isDetecting = true;
-    },
-
-    stopDetecting: function(){
-      delete this._detectCallback;
-      this.isDetecting = false;
     }
+
   };
 
   return KeyboardHandler;

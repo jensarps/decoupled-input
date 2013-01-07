@@ -209,18 +209,8 @@ define(function () {
     destroy: function(){
       window.removeEventListener('MozGamepadConnected', this.connectListener, false);
       window.removeEventListener('MozGamepadDisconnected', this.disconnectListener, false);
-    },
-
-    /* detection methods */
-    startDetecting: function(callback){
-      this._detectCallback = callback;
-      this.isDetecting = true;
-    },
-
-    stopDetecting: function(){
-      delete this._detectCallback;
-      this.isDetecting = false;
     }
+
   };
 
   return GamepadHandler;

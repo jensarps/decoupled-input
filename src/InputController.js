@@ -68,18 +68,24 @@ define(function () {
     },
 
     /* detection methods */
-    startDetecting: function(callback){
+    startDetecting: function (callback) {
+      var detectCallback = function (evt) {
+        evt.timestamp = Date.now();
+        callback(evt);
+      };
+
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
-        this.deviceHandlers[deviceName].startDetecting(function(evt){
-          evt.timestamp = Date.now();
-          callback(evt);
-        });
+        var deviceHandler = this.deviceHandlers[deviceName];
+        deviceHandler._detectCallback = detectCallback;
+        deviceHandler.isDetecting = true;
       }, this);
     },
 
     stopDetecting: function(){
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
-        this.deviceHandlers[deviceName].stopDetecting();
+        var deviceHandler = this.deviceHandlers[deviceName];
+        deviceHandler._detectCallback = null;
+        deviceHandler.isDetecting = false;
       }, this);
     }
 

@@ -115,18 +115,8 @@ define(function(){
       document.removeEventListener('mouseup', this.upListener, false);
       document.removeEventListener('contextmenu', this.ctxListener, false);
       window.removeEventListener('resize', this.resizeListener, false);
-    },
-
-    /* detection methods */
-    startDetecting: function(callback){
-      this._detectCallback = callback;
-      this.isDetecting = true;
-    },
-
-    stopDetecting: function(){
-      delete this._detectCallback;
-      this.isDetecting = false;
     }
+
   };
 
   return MouseHandler;
