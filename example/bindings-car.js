@@ -3,7 +3,8 @@ define(function(){
   /* This is an example bindings file */
 
   var KEYBOARD = 'keyboard',
-      MOUSE = 'mouse';
+      MOUSE = 'mouse',
+      SPEECH = 'speech';
 
   var bindings = {
 
@@ -38,6 +39,28 @@ define(function(){
       inputId: 84, // t
       down: true,
       up: false
+    },
+
+    toggleSpeechInput: {
+      device: KEYBOARD,
+      inputId: 86, // v
+      down: true,
+      up: false
+    },
+
+    fullSpeed: {
+      device: SPEECH,
+      inputId: 'full speed'
+    },
+
+    stop: {
+      device: SPEECH,
+      inputId: 'stop'
+    },
+
+    slow: {
+      device: SPEECH,
+      inputId: 'slow'
     }
   };
 
