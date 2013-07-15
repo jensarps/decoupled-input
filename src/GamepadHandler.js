@@ -60,7 +60,7 @@ define(function () {
           break;
         }
       }
-      if (this.gamepads.length == 0) {
+      if (this.gamepads.length === 0) {
         this.stopPolling();
       }
     },
