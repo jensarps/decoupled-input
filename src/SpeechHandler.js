@@ -37,12 +37,14 @@ define(function () {
     },
 
     _errorHandler: function () {
+      /*jshint expr:true */
       this.isRecognizing = false;
       this.isActive = false;
       this.onRecognitionEnded && this.onRecognitionEnded();
     },
 
     _endHandler: function () {
+      /*jshint expr:true */
       this.isRecognizing = false;
       this.isActive = false;
       this.onRecognitionEnded && this.onRecognitionEnded();
