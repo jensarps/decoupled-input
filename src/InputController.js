@@ -8,7 +8,8 @@ define(function () {
     this.bindings = {};
     this.input = {};
 
-    this.setupBindings(bindings);
+    /*jshint expr:true */
+    bindings && this.setupBindings(bindings);
   };
 
   InputController.prototype = {
