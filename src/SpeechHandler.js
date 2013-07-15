@@ -8,6 +8,7 @@ define(function () {
       return; // sorry.
     }
 
+    /*jshint newcap:false */
     var rec = this.recognition = new webkitSpeechRecognition();
     rec.continuous = true;
     rec.interimResults = true;
