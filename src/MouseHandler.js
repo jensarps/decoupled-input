@@ -1,3 +1,4 @@
+/*global define:false, document:false, window:false */
 define(function(){
 
   'use strict';

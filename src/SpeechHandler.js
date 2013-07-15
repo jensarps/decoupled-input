@@ -1,3 +1,4 @@
+/*global define:false, window: false */
 define(function () {
 
   'use strict';
@@ -11,7 +12,7 @@ define(function () {
     }
 
     /*jshint newcap:false */
-    var rec = this.recognition = new webkitSpeechRecognition();
+    var rec = this.recognition = new window.webkitSpeechRecognition();
     rec.continuous = true;
     rec.interimResults = true;
 
