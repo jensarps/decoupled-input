@@ -29,12 +29,25 @@ module.exports = function(grunt) {
         // relax:
         loopfunc: true
       }
+    },
+
+    requirejs: {
+      compile: {
+        options: {
+          baseUrl: 'src',
+          optimize: 'uglify',
+          useStrict: true,
+          name: 'bundle-all',
+          out: 'build/input-controller.js'
+        }
+      }
     }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
-  grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('default', ['jshint', 'requirejs']);
 
 };
