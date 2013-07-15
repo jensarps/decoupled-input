@@ -34,7 +34,7 @@ define(function(){
 
     hasPointerLockSupport: false,
 
-    pointerLockElementProperty: '',
+    pointerLockElementProperty: null,
 
     movementProperty: '',
 
@@ -52,7 +52,7 @@ define(function(){
           halfWidth = width / 2,
           height = this.height,
           halfHeight = height / 2,
-          isPointerLocked = this.hasPointerLockSupport && document[this.pointerLockElementProperty] != null;
+          isPointerLocked = this.hasPointerLockSupport && document[this.pointerLockElementProperty] !== null;
 
       if(!this._initialized){
 
