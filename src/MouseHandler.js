@@ -1,5 +1,7 @@
 define(function(){
 
+  'use strict';
+
   var MouseHandler = function(bindings, input){
     this.bindings = bindings;
     this.input = input;

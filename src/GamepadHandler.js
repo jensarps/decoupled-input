@@ -1,5 +1,7 @@
 define(function () {
 
+  'use strict';
+
   /**
    * Gamepad polling code taken from this fantastic article by Marcin Wichary:
    *

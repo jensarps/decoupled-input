@@ -1,5 +1,7 @@
 define(function(){
 
+  'use strict';
+
   var KeyboardHandler = function(bindings, input){
     this.bindings = bindings;
     this.input = input;

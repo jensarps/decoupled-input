@@ -1,5 +1,7 @@
 define(function () {
 
+  'use strict';
+
   var InputController = function (bindings) {
     this.deviceHandlers = {};
     this.bindings = {};
