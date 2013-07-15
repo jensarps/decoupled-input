@@ -7,11 +7,11 @@ define([
 
   'use strict';
 
-  var inputController = new InputController();
+  var bundle = new InputController();
 
-  inputController.registerDeviceHandler(MouseHandler, 'mouse');
-  inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+  bundle.registerDeviceHandler(MouseHandler, 'mouse');
+  bundle.registerDeviceHandler(Keyboardhandler, 'keyboard');
 
-  return inputController;
+  return bundle;
 
 });

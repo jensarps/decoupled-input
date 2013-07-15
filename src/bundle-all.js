@@ -9,13 +9,13 @@ define([
 
   'use strict';
 
-  var inputController = new InputController();
+  var bundle = new InputController();
 
-  inputController.registerDeviceHandler(MouseHandler, 'mouse');
-  inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
-  inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
-  inputController.registerDeviceHandler(SpeechHandler, 'speechhandler');
+  bundle.registerDeviceHandler(MouseHandler, 'mouse');
+  bundle.registerDeviceHandler(Keyboardhandler, 'keyboard');
+  bundle.registerDeviceHandler(GamepadHandler, 'gamepad');
+  bundle.registerDeviceHandler(SpeechHandler, 'speechhandler');
 
-  return inputController;
+  return bundle;
 
 });
