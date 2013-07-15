@@ -99,12 +99,13 @@ define(function(){
       this.input.mouseX = mouseX;
       this.input.mouseY = mouseY;
 
+      var binding;
       if('x' in this.bindings){
-        var binding = this.bindings.x;
+        binding = this.bindings.x;
         this.input[binding.description] = binding.invert ? x * -1 : x;
       }
       if('y' in this.bindings){
-        var binding = this.bindings.y;
+        binding = this.bindings.y;
         this.input[binding.description] = binding.invert ? y * -1 : y;
       }
     },
