@@ -10,6 +10,7 @@ module.exports = function(grunt) {
     jshint: {
       all: ['src/*'],
       options: {
+        // enforce:
         bitwise: true,
         camelcase: true,
         curly: true,
@@ -23,7 +24,8 @@ module.exports = function(grunt) {
         unused: true,
         strict: true,
         trailing: true,
-
+        indent: 2,
+        // relax:
         loopfunc: true
       }
     }
