@@ -55,7 +55,7 @@ define(function () {
         down: !!binding.down,
         up: !!binding.up,
         invert: !!binding.invert
-      }
+      };
     },
 
     registerDeviceHandler: function (DeviceHandler, deviceName) {

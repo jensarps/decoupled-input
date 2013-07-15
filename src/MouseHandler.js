@@ -16,7 +16,7 @@ define(function(){
     ].forEach(function(propName){
       if(propName in document){
         hasPointerLockSupport = true;
-        pointerLockElementProperty = propName
+        pointerLockElementProperty = propName;
       }
     }, this);
     this.hasPointerLockSupport = hasPointerLockSupport;
