@@ -1,6 +1,7 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
+  'use strict';
 
   // Project configuration.
   grunt.initConfig({
@@ -8,7 +9,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     jshint: {
-      all: ['src/*'],
+      all: ['Gruntfile.js', 'src/*'],
       options: {
         // enforce:
         bitwise: true,
