@@ -10,9 +10,9 @@ define(function(){
     var hasPointerLockSupport = false;
     var pointerLockElementProperty = null;
     [
-      "webkitPointerLockElement",
-      "mozPointerLockElement",
-      "pointerLockElement"
+      'webkitPointerLockElement',
+      'mozPointerLockElement',
+      'pointerLockElement'
     ].forEach(function(propName){
       if(propName in document){
         hasPointerLockSupport = true;
@@ -56,7 +56,7 @@ define(function(){
 
       if(!this._initialized){
 
-        ["webkitMovement", "mozMovement", "movement"].forEach(function(propName){
+        ['webkitMovement', 'mozMovement', 'movement'].forEach(function(propName){
           if(propName + 'X' in evt){
             this.movementProperty = propName;
           }
