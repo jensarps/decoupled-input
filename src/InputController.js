@@ -3,13 +3,10 @@ define(function () {
 
   'use strict';
 
-  var InputController = function (bindings) {
+  var InputController = function () {
     this.deviceHandlers = {};
     this.bindings = {};
     this.input = {};
-
-    /*jshint expr:true */
-    bindings && this._processBindings(bindings);
   };
 
   InputController.prototype = {
