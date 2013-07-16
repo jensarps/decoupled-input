@@ -9,7 +9,7 @@ define(function () {
     this.input = {};
 
     /*jshint expr:true */
-    bindings && this.setupBindings(bindings);
+    bindings && this._processBindings(bindings);
   };
 
   InputController.prototype = {
@@ -20,7 +20,7 @@ define(function () {
 
     input: null,
 
-    setupBindings: function (bindings) {
+    _processBindings: function (bindings) {
 
       Object.keys(bindings).forEach(function (description) {
         var binding = bindings[description],
@@ -41,8 +41,8 @@ define(function () {
       }, this);
     },
 
-    updateBindings: function(bindings){
-      this.setupBindings(bindings);
+    setBindings: function(bindings){
+      this._processBindings(bindings);
 
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         this.deviceHandlers[deviceName].bindings = this.bindings[deviceName] || {};

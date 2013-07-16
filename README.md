@@ -120,7 +120,7 @@ The FPS example uses multiple assignments.
 
 ##Updating the binding configuration
 
-To update the binding configuration during runtime, just call the controller's `updateBindings()` method with the new bindings:
+To update the binding configuration during runtime, just call the controller's `setBindings()` method with the new bindings:
 
 ~~~javascript
 
@@ -128,7 +128,7 @@ To update the binding configuration during runtime, just call the controller's `
 bindings.pitch.invert = false;
 
 // now update the controller
-inputController.updateBindings(bindings);
+inputController.setBindings(bindings);
 
 ~~~
 
