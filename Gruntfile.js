@@ -46,7 +46,7 @@ module.exports = function (grunt) {
     'closure-compiler': {
       all: {
         closurePath: 'lib/closure',
-        jsOutputFile: 'build/input-controller-all.js',
+        jsOutputFile: 'build/input-controller.js',
         js: [
           'src/InputController.js',
           'src/KeyboardHandler.js',
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
 
     wrap: {
       'all': {
-        src: ['build/input-controller-all.js'],
+        src: ['build/input-controller.js'],
         dest: './',
         wrapper: [
           '(function (name, definition, global) {if (typeof define === \'function\') {define(definition);} else if (typeof module !== \'undefined\' && module.exports) {module.exports = definition();} else {global[name] = definition();}})(\'inputController\', function () {',
