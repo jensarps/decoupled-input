@@ -27,7 +27,7 @@ define(function () {
     },
 
     _processBindings: function (bindings) {
-      var toString = ({}).toString;
+      var toString = {}.toString;
 
       Object.keys(bindings).forEach(function (description) {
         var binding = bindings[description],
