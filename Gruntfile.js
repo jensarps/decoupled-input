@@ -3,6 +3,25 @@ module.exports = function (grunt) {
 
   'use strict';
 
+  var UMDWrapper = {
+    /*jshint indent: false */
+    before: [
+      '(function (name, definition, global) {',
+        'if (typeof define === \'function\') {',
+          'define(definition);',
+        '} else if (typeof module !== \'undefined\' && module.exports) {',
+          'module.exports = definition();',
+        '} else {',
+          'global[name] = definition();',
+        '}',
+      '})(\'inputController\', function () {'
+    ],
+    after: [
+        'return module$src$bundle_all; ',
+      '}, this);\n'
+    ]
+  };
+
   // Project configuration.
   grunt.initConfig({
 
@@ -92,8 +111,8 @@ module.exports = function (grunt) {
         src: ['build/input-controller.js'],
         dest: './',
         wrapper: [
-          '(function (name, definition, global) {if (typeof define === \'function\') {define(definition);} else if (typeof module !== \'undefined\' && module.exports) {module.exports = definition();} else {global[name] = definition();}})(\'inputController\', function () {',
-          'return module$src$bundle_all; }, this);\n'
+          UMDWrapper.before.join(' '),
+          UMDWrapper.after.join(' ')
         ]
       },
 
@@ -101,8 +120,8 @@ module.exports = function (grunt) {
         src: ['build/input-controller-debug.js'],
         dest: './',
         wrapper: [
-          '(function (name, definition, global) {if (typeof define === \'function\') {define(definition);} else if (typeof module !== \'undefined\' && module.exports) {module.exports = definition();} else {global[name] = definition();}})(\'inputController\', function () {',
-          'return module$src$bundle_all; }, this);\n'
+          UMDWrapper.before.join('\n'),
+          UMDWrapper.after.join('\n')
         ]
       }
     }
