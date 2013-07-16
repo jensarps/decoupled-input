@@ -27,10 +27,10 @@ define(function () {
     },
 
     _processBindings: function (bindings) {
+      var toString = ({}).toString;
 
       Object.keys(bindings).forEach(function (description) {
-        var binding = bindings[description],
-            toString = ({}).toString;
+        var binding = bindings[description];
 
         // set a default value; the value must be readable before
         // a user input occurs.
