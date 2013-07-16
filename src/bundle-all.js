@@ -11,10 +11,7 @@ define([
 
   var bundle = new InputController();
 
-  bundle.registerDeviceHandler(MouseHandler);
-  bundle.registerDeviceHandler(Keyboardhandler);
-  bundle.registerDeviceHandler(GamepadHandler);
-  bundle.registerDeviceHandler(SpeechHandler);
+  bundle.registerDeviceHandlers([MouseHandler, Keyboardhandler, GamepadHandler, SpeechHandler]);
 
   return bundle;
 

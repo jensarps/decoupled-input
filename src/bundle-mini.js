@@ -3,14 +3,13 @@ define([
   '../src/InputController',
   '../src/MouseHandler',
   '../src/KeyboardHandler'
-], function (InputController, MouseHandler, Keyboardhandler) {
+], function (InputController, MouseHandler, KeyboardHandler) {
 
   'use strict';
 
   var bundle = new InputController();
 
-  bundle.registerDeviceHandler(MouseHandler);
-  bundle.registerDeviceHandler(Keyboardhandler);
+  bundle.registerDeviceHandlers([MouseHandler, KeyboardHandler]);
 
   return bundle;
 

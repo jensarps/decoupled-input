@@ -67,6 +67,10 @@ define(function () {
       this.deviceHandlers[name] = new DeviceHandler(this.bindings[name] || {}, this.input);
     },
 
+    registerDeviceHandlers: function (deviceHandlers) {
+      deviceHandlers.forEach(this.registerDeviceHandler, this);
+    },
+
     destroy: function () {
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         this.deviceHandlers[deviceName].destroy();
