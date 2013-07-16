@@ -30,13 +30,14 @@ define(function () {
       var toString = ({}).toString;
 
       Object.keys(bindings).forEach(function (description) {
-        var binding = bindings[description];
+        var binding = bindings[description],
+            isMultiple = toString.call(binding) == '[object Array]';
 
         // set a default value; the value must be readable before
         // a user input occurs.
         this.input[description] = 0;
 
-        if (toString.call(binding) == '[object Array]') {
+        if (isMultiple) {
           for (var i = 0, m = binding.length; i < m; i++) {
             var _binding = binding[i];
             this._applyBinding(_binding, description);
