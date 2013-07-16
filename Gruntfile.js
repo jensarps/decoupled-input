@@ -93,7 +93,7 @@ module.exports = function (grunt) {
         dest: './',
         wrapper: [
           '(function (name, definition, global) {if (typeof define === \'function\') {define(definition);} else if (typeof module !== \'undefined\' && module.exports) {module.exports = definition();} else {global[name] = definition();}})(\'inputController\', function () {',
-          'return module$src$bundle_all; });\n'
+          'return module$src$bundle_all; }, this);\n'
         ]
       },
 
@@ -102,7 +102,7 @@ module.exports = function (grunt) {
         dest: './',
         wrapper: [
           '(function (name, definition, global) {if (typeof define === \'function\') {define(definition);} else if (typeof module !== \'undefined\' && module.exports) {module.exports = definition();} else {global[name] = definition();}})(\'inputController\', function () {',
-          'return module$src$bundle_all; });\n'
+          'return module$src$bundle_all; }, this);\n'
         ]
       }
     }
