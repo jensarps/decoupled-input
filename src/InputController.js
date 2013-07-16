@@ -17,6 +17,15 @@ define(function () {
 
     input: null,
 
+    setBindings: function(bindings){
+      this._processBindings(bindings);
+
+      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
+        this.deviceHandlers[deviceName].bindings = this.bindings[deviceName] || {};
+        this.deviceHandlers[deviceName].input = this.input;
+      }, this);
+    },
+
     _processBindings: function (bindings) {
 
       Object.keys(bindings).forEach(function (description) {
@@ -35,15 +44,6 @@ define(function () {
         } else {
           this._applyBinding(binding, description);
         }
-      }, this);
-    },
-
-    setBindings: function(bindings){
-      this._processBindings(bindings);
-
-      Object.keys(this.deviceHandlers).forEach(function (deviceName) {
-        this.deviceHandlers[deviceName].bindings = this.bindings[deviceName] || {};
-        this.deviceHandlers[deviceName].input = this.input;
       }, this);
     },
 
