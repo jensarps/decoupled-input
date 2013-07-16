@@ -9,8 +9,8 @@ define([
 
   var bundle = new InputController();
 
-  bundle.registerDeviceHandler(MouseHandler, 'mouse');
-  bundle.registerDeviceHandler(Keyboardhandler, 'keyboard');
+  bundle.registerDeviceHandler(MouseHandler);
+  bundle.registerDeviceHandler(Keyboardhandler);
 
   return bundle;
 

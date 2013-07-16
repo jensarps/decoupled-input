@@ -24,6 +24,8 @@ define(function () {
 
   GamepadHandler.prototype = {
 
+    name: 'gamepad',
+
     deadzone: 0.01,
 
     buttonStates: null,

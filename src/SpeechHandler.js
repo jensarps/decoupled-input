@@ -24,6 +24,8 @@ define(function () {
 
   SpeechHandler.prototype = {
 
+    name: 'speech',
+
     recognition: null,
 
     isRecognizing: false,

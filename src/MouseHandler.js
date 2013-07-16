@@ -35,6 +35,8 @@ define(function(){
 
   MouseHandler.prototype = {
 
+    name: 'mouse',
+
     hasPointerLockSupport: false,
 
     pointerLockElementProperty: null,

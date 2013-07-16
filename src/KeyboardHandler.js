@@ -13,6 +13,8 @@ define(function(){
 
   KeyboardHandler.prototype = {
 
+    name: 'keyboard',
+
     isDetecting: false,
 
     onKeyDown: function(evt){

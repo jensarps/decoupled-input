@@ -62,8 +62,9 @@ define(function () {
       };
     },
 
-    registerDeviceHandler: function (DeviceHandler, deviceName) {
-      this.deviceHandlers[deviceName] = new DeviceHandler(this.bindings[deviceName] || {}, this.input);
+    registerDeviceHandler: function (DeviceHandler) {
+      var name = DeviceHandler.prototype.name;
+      this.deviceHandlers[name] = new DeviceHandler(this.bindings[name] || {}, this.input);
     },
 
     destroy: function () {
