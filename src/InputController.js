@@ -73,6 +73,7 @@ define(function () {
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         this.deviceHandlers[deviceName].destroy();
       }, this);
+      this.deviceHandlers = {};
     },
 
     /* detection methods */
