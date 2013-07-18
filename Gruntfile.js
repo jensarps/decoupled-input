@@ -85,7 +85,7 @@ module.exports = function (grunt) {
       },
 
       'debug': {
-        src: ['build/input-controller-debug.js'],
+        src: ['build/input-controller.dev.js'],
         dest: './',
         wrapper: [
           UMDWrapper.before.join('\n'),
