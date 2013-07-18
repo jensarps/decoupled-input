@@ -141,8 +141,8 @@ module.exports = function (grunt) {
     if (arguments.length === 0) {
       grunt.log.writeln(this.name + ', no args');
     } else {
-      var handlerNames = [].slice.call(arguments);
-      var handlerClassNames = handlerNames.map(function(name){
+
+      var handlerClassNames = [].slice.call(arguments).map(function(name){
         return name.slice(0,1).toUpperCase() + name.slice(1, name.length) + 'Handler';
       });
       var handlerModuleNames = handlerClassNames.map(function(name){
