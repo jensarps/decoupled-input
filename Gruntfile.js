@@ -58,8 +58,8 @@ module.exports = function (grunt) {
         src: ['build/input-controller.js'],
         dest: './',
         wrapper: [
-          UMDWrapper.before.join(' '),
-          UMDWrapper.after.join(' ')
+          UMDWrapper.before.join(''),
+          UMDWrapper.after.join('')
         ]
       },
 
