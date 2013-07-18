@@ -17,7 +17,7 @@ module.exports = function (grunt) {
       '})(\'inputController\', function () {'
     ],
     after: [
-        'return module$src$bundle_all; ',
+        'return module$build$bundle; ',
       '}, this);\n'
     ]
   };
@@ -149,6 +149,7 @@ module.exports = function (grunt) {
         return '"../src/' + name + '"';
       });
 
+      // create bundle file contents
       var bundleFileContents = [
         '/*global define:false*/',
         'define([',
@@ -165,6 +166,30 @@ module.exports = function (grunt) {
       grunt.file.write('build/bundle.js', bundleFileContents);
       grunt.log.ok('Bundle file written. Configured to include the following device handlers:');
       grunt.log.writeln(handlerClassNames.join('\n'));
+
+      //configure closure compiler
+      var closureFiles = handlerClassNames.map(function(name){
+        return 'src/' + name + '.js';
+      });
+      closureFiles.unshift('src/InputController.js');
+      closureFiles.push('build/bundle.js');
+
+      grunt.config.set('closure-compiler.bundle', {
+        closurePath: 'lib/closure',
+        jsOutputFile: 'build/input-controller.js',
+        js: closureFiles,
+        maxBuffer: 500,
+        options: {
+          debug: true,
+          formatting: 'PRETTY_PRINT',
+          'language_in': 'ECMASCRIPT5_STRICT',
+          'process_common_js_modules': null,
+          'transform_amd_modules': null,
+          'common_js_entry_module': 'build/bundle.js'
+        }
+      });
+      grunt.task.run('closure-compiler:bundle');
+
     }
   });
 };
