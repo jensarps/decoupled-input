@@ -127,7 +127,14 @@ module.exports = function (grunt) {
       grunt.log.ok('Bundle file written. Configured to include the following device handlers:');
       grunt.log.writeln(handlerClassNames.join('\n'));
 
-      // run jshint, also on bundle
+      // run jshint on all files, also on bundle
+      var jshintFiles = handlerClassNames.map(function (name) {
+        return 'src/' + name + '.js';
+      });
+      jshintFiles.push('src/InputController.js');
+      jshintFiles.push('Gruntfile.js');
+      jshintFiles.push('build/bundle.js');
+      grunt.config.set('jshint.all', jshintFiles);
       grunt.task.run('jshint');
 
       //configure closure compiler
