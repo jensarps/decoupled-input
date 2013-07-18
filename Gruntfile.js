@@ -135,4 +135,36 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['jshint', 'closure-compiler:all', 'wrap:all']);
   grunt.registerTask('debug', ['jshint', 'closure-compiler:debug', 'wrap:debug']);
+
+  grunt.registerTask('configure', 'A task to select specific handlers', function() {
+
+    if (arguments.length === 0) {
+      grunt.log.writeln(this.name + ', no args');
+    } else {
+      var handlerNames = [].slice.call(arguments);
+      var handlerClassNames = handlerNames.map(function(name){
+        return name.slice(0,1).toUpperCase() + name.slice(1, name.length) + 'Handler';
+      });
+      var handlerModuleNames = handlerClassNames.map(function(name){
+        return '"../src/' + name + '"';
+      });
+
+      var bundleFileContents = [
+        '/*global define:false*/',
+        'define([',
+        '"../src/InputController",',
+        handlerModuleNames.join(',\n'),
+        '], function (InputController, ' + handlerClassNames.join(', ') + ') {',
+        '"use strict";',
+        'var bundle = new InputController();',
+        'bundle.registerDeviceHandlers([' + handlerClassNames.join(', ') + ']);',
+        'return bundle;',
+        '});\n'
+      ].join('\n').replace(/"/g, '\'');
+
+      grunt.file.write('build/bundle.js', bundleFileContents);
+      grunt.log.ok('Bundle file written. Configured to include the following device handlers:');
+      grunt.log.writeln(handlerClassNames.join('\n'));
+    }
+  });
 };
