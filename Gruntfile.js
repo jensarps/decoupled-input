@@ -128,13 +128,13 @@ module.exports = function (grunt) {
       grunt.log.writeln(handlerClassNames.join('\n'));
 
       // run jshint on all files, also on bundle
-      var jshintFiles = handlerClassNames.map(function (name) {
+      var jsHintFiles = handlerClassNames.map(function (name) {
         return 'src/' + name + '.js';
       });
-      jshintFiles.push('src/InputController.js');
-      jshintFiles.push('Gruntfile.js');
-      jshintFiles.push('build/bundle.js');
-      grunt.config.set('jshint.all', jshintFiles);
+      jsHintFiles.push('src/InputController.js');
+      jsHintFiles.push('Gruntfile.js');
+      jsHintFiles.push('build/bundle.js');
+      grunt.config.set('jshint.all', jsHintFiles);
       grunt.task.run('jshint');
 
       //configure closure compiler
