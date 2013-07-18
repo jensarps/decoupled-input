@@ -50,18 +50,6 @@ module.exports = function (grunt) {
       }
     },
 
-    requirejs: {
-      compile: {
-        options: {
-          baseUrl: 'src',
-          optimize: 'uglify',
-          useStrict: true,
-          name: 'bundle-all',
-          out: 'build/input-controller.js'
-        }
-      }
-    },
-
     'closure-compiler': {
       debug: {
         closurePath: 'lib/closure',
