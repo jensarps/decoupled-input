@@ -97,6 +97,15 @@ module.exports = function (grunt) {
         return '"../src/' + name + '"';
       });
 
+      // check for handler module existence
+      for (var i = 0, m = handlerClassNames.length; i < m; i++) {
+        var fileName = handlerClassNames[i] + '.js';
+        if (!grunt.file.exists('src/' + fileName)) {
+          grunt.log.error('ERROR: Device handler "' + fileName + '" doesn\'t exist.');
+          return false;
+        }
+      }
+
       // create bundle file contents
       var bundleFileContents = [
         '/*global define:false*/',
