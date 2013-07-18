@@ -190,6 +190,9 @@ module.exports = function (grunt) {
       });
       grunt.task.run('closure-compiler:bundle');
 
+      // wrap it up
+      grunt.task.run('wrap:all');
+
     }
   });
 };
