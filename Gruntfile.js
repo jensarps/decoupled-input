@@ -104,6 +104,8 @@ module.exports = function (grunt) {
   grunt.registerTask('debug', ['jshint', 'closure-compiler:debug', 'wrap:debug']);
 
   var handlers = grunt.option('handlers') || ('mouse,keyboard,gamepad,speech');
+  var isDebug = [true, '1', 'true', 'on'].indexOf(grunt.option('dev')) !== -1;
+
   grunt.registerTask('default', ['configure:' + handlers.replace(/,/g, ':')]);
 
   grunt.registerTask('configure', 'A task to select specific handlers', function() {
@@ -148,25 +150,28 @@ module.exports = function (grunt) {
       closureFiles.unshift('src/InputController.js');
       closureFiles.push('build/bundle.js');
 
+      var closureOptions = {
+        'language_in': 'ECMASCRIPT5_STRICT',
+        'process_common_js_modules': null,
+        'transform_amd_modules': null,
+        'common_js_entry_module': 'build/bundle.js'
+      };
+      if (isDebug) {
+        closureOptions.debug = true;
+        closureOptions.formatting = 'PRETTY_PRINT';
+      }
+
       grunt.config.set('closure-compiler.bundle', {
         closurePath: 'lib/closure',
-        jsOutputFile: 'build/input-controller.js',
+        jsOutputFile: 'build/input-controller' + (isDebug ? '.dev' : '') + '.js',
         js: closureFiles,
         maxBuffer: 500,
-        options: {
-          debug: true,
-          formatting: 'PRETTY_PRINT',
-          'language_in': 'ECMASCRIPT5_STRICT',
-          'process_common_js_modules': null,
-          'transform_amd_modules': null,
-          'common_js_entry_module': 'build/bundle.js'
-        }
+        options: closureOptions
       });
       grunt.task.run('closure-compiler:bundle');
 
       // wrap it up
-      grunt.task.run('wrap:all');
-
+      grunt.task.run('wrap:' + (isDebug ? 'debug' : 'all'));
     }
   });
 };
