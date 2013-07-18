@@ -17,6 +17,8 @@ define(function () {
 
     input: null,
 
+    version: '1.0.0',
+
     setBindings: function(bindings){
       this._processBindings(bindings);
 
