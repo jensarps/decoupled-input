@@ -63,26 +63,6 @@ module.exports = function (grunt) {
     },
 
     'closure-compiler': {
-      all: {
-        closurePath: 'lib/closure',
-        jsOutputFile: 'build/input-controller.js',
-        js: [
-          'src/InputController.js',
-          'src/KeyboardHandler.js',
-          'src/MouseHandler.js',
-          'src/GamepadHandler.js',
-          'src/SpeechHandler.js',
-          'src/bundle-all.js'
-        ],
-        maxBuffer: 500,
-        options: {
-          'language_in': 'ECMASCRIPT5_STRICT',
-          'process_common_js_modules': null,
-          'transform_amd_modules': null,
-          'common_js_entry_module': 'src/bundle-all.js'
-        }
-      },
-
       debug: {
         closurePath: 'lib/closure',
         jsOutputFile: 'build/input-controller-debug.js',
