@@ -28,7 +28,7 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     jshint: {
-      all: ['Gruntfile.js', 'src/*', 'build/bundle.js'],
+      all: ['Gruntfile.js', 'src/*'],
       options: {
         // enforce:
         bitwise: true,
