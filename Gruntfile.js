@@ -87,7 +87,9 @@ module.exports = function (grunt) {
   grunt.registerTask('configure', 'A task to select specific handlers', function () {
 
     if (arguments.length === 0) {
-      grunt.log.writeln(this.name + ', no args');
+      grunt.log.error('ERROR: Please don\'t call the "configure" task directly.');
+      grunt.log.writeln('Use "grunt --handlers=handler1[,handler2]" instead.');
+      return false;
     } else {
 
       var handlerClassNames = [].slice.call(arguments).map(function (name) {
