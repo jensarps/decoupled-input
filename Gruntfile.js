@@ -100,7 +100,7 @@ module.exports = function (grunt) {
       // check for handler module existence
       for (var i = 0, m = handlerClassNames.length; i < m; i++) {
         var fileName = handlerClassNames[i] + '.js';
-        if (!grunt.file.exists('src/' + fileName)) {
+        if (!grunt.file.isFile('src/' + fileName)) {
           grunt.log.error('ERROR: Device handler "' + fileName + '" doesn\'t exist.');
           return false;
         }
