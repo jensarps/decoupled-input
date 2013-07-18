@@ -50,29 +50,8 @@ module.exports = function (grunt) {
       }
     },
 
-    'closure-compiler': {
-      debug: {
-        closurePath: 'lib/closure',
-        jsOutputFile: 'build/input-controller-debug.js',
-        js: [
-          'src/InputController.js',
-          'src/KeyboardHandler.js',
-          'src/MouseHandler.js',
-          'src/GamepadHandler.js',
-          'src/SpeechHandler.js',
-          'src/bundle-all.js'
-        ],
-        maxBuffer: 500,
-        options: {
-          debug: true,
-          formatting: 'PRETTY_PRINT',
-          'language_in': 'ECMASCRIPT5_STRICT',
-          'process_common_js_modules': null,
-          'transform_amd_modules': null,
-          'common_js_entry_module': 'src/bundle-all.js'
-        }
-      }
-    },
+    // this is configured later
+    'closure-compiler': {},
 
     wrap: {
       'all': {
@@ -100,8 +79,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-closure-compiler');
   grunt.loadNpmTasks('grunt-wrap');
-
-  grunt.registerTask('debug', ['jshint', 'closure-compiler:debug', 'wrap:debug']);
 
   var handlers = grunt.option('handlers') || ('mouse,keyboard,gamepad,speech');
   var isDebug = [true, '1', 'true', 'on'].indexOf(grunt.option('dev')) !== -1;
