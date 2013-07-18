@@ -133,9 +133,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-closure-compiler');
   grunt.loadNpmTasks('grunt-wrap');
 
-  grunt.registerTask('default', ['jshint', 'closure-compiler:all', 'wrap:all']);
+  grunt.registerTask('default', ['configure:mouse:keyboard:gamepad:speech']);
   grunt.registerTask('debug', ['jshint', 'closure-compiler:debug', 'wrap:debug']);
-
   grunt.registerTask('configure', 'A task to select specific handlers', function() {
 
     if (arguments.length === 0) {
