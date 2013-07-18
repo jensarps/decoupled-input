@@ -28,7 +28,7 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     jshint: {
-      all: ['Gruntfile.js', 'src/*'],
+      all: ['Gruntfile.js', 'src/*', 'build/bundle.js'],
       options: {
         // enforce:
         bitwise: true,
@@ -152,6 +152,7 @@ module.exports = function (grunt) {
       // create bundle file contents
       var bundleFileContents = [
         '/*global define:false*/',
+        '/*jshint indent:false*/',
         'define([',
         '"../src/InputController",',
         handlerModuleNames.join(',\n'),
@@ -166,6 +167,9 @@ module.exports = function (grunt) {
       grunt.file.write('build/bundle.js', bundleFileContents);
       grunt.log.ok('Bundle file written. Configured to include the following device handlers:');
       grunt.log.writeln(handlerClassNames.join('\n'));
+
+      // run jshint, also on bundle
+      grunt.task.run('jshint');
 
       //configure closure compiler
       var closureFiles = handlerClassNames.map(function(name){
