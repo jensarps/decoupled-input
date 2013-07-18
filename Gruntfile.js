@@ -7,17 +7,17 @@ module.exports = function (grunt) {
     /*jshint indent: false */
     before: [
       '(function (name, definition, global) {',
-        'if (typeof define === \'function\') {',
-          'define(definition);',
-        '} else if (typeof module !== \'undefined\' && module.exports) {',
-          'module.exports = definition();',
-        '} else {',
-          'global[name] = definition();',
-        '}',
+      'if (typeof define === \'function\') {',
+      'define(definition);',
+      '} else if (typeof module !== \'undefined\' && module.exports) {',
+      'module.exports = definition();',
+      '} else {',
+      'global[name] = definition();',
+      '}',
       '})(\'inputController\', function () {'
     ],
     after: [
-        'return module$build$bundle; ',
+      'return module$build$bundle; ',
       '}, this);\n'
     ]
   };
@@ -84,16 +84,16 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['configure:' + handlers.replace(/,/g, ':')]);
 
-  grunt.registerTask('configure', 'A task to select specific handlers', function() {
+  grunt.registerTask('configure', 'A task to select specific handlers', function () {
 
     if (arguments.length === 0) {
       grunt.log.writeln(this.name + ', no args');
     } else {
 
-      var handlerClassNames = [].slice.call(arguments).map(function(name){
-        return name.slice(0,1).toUpperCase() + name.slice(1, name.length) + 'Handler';
+      var handlerClassNames = [].slice.call(arguments).map(function (name) {
+        return name.slice(0, 1).toUpperCase() + name.slice(1, name.length) + 'Handler';
       });
-      var handlerModuleNames = handlerClassNames.map(function(name){
+      var handlerModuleNames = handlerClassNames.map(function (name) {
         return '"../src/' + name + '"';
       });
 
@@ -129,7 +129,7 @@ module.exports = function (grunt) {
       grunt.task.run('jshint');
 
       //configure closure compiler
-      var closureFiles = handlerClassNames.map(function(name){
+      var closureFiles = handlerClassNames.map(function (name) {
         return 'src/' + name + '.js';
       });
       closureFiles.unshift('src/InputController.js');
