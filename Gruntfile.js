@@ -103,7 +103,7 @@ module.exports = function (grunt) {
       for (var i = 0, m = handlerClassNames.length; i < m; i++) {
         var fileName = handlerClassNames[i] + '.js';
         if (!grunt.file.isFile('src/' + fileName)) {
-          grunt.log.error('ERROR: Device handler "' + fileName + '" doesn\'t exist.');
+          grunt.fatal('Device handler "' + fileName + '" doesn\'t exist.');
           return false;
         }
       }
