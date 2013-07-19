@@ -83,21 +83,11 @@
   <div id="voiceCommandDisplay"></div>
   <script type="text/javascript">
 
-    // require controller files...
     require([
-      // the controller itself:
-      '../src/InputController',
-      // the device handlers:
-      '../src/MouseHandler',
-      '../src/KeyboardHandler',
-      '../src/SpeechHandler',
-      // and the bindings file:
+      '../build/input-controller',
       'bindings-car'
     ], function(
-      InputController,
-      MouseHandler,
-      Keyboardhandler,
-      SpeechHandler,
+      inputController,
       bindings
     ){
 
@@ -107,7 +97,7 @@
 
       var input; // this is where we will put input data into.
 
-      var inputController, speechHandler;
+      var speechHandler;
 
       var speed = 0,
           targetSpeed = 0,
@@ -123,10 +113,7 @@
       function init () {
 
         /* Input */
-        inputController = new InputController(bindings);
-        inputController.registerDeviceHandler(MouseHandler, 'mouse');
-        inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
-        inputController.registerDeviceHandler(SpeechHandler, 'speech');
+        inputController.setBindings(bindings);
 
         speechHandler = inputController.deviceHandlers.speech;
         speechHandler.onRecognitionEnded = function(){
@@ -205,8 +192,6 @@
         if (input.boost) {
             speed *= 1.5;
         }
-
-        console.log(diff.toFixed(3), targetSpeed.toFixed(3), speed.toFixed(3));
 
         camera.translateZ(-speed);
 
