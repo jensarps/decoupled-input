@@ -3,6 +3,24 @@ define(function(){
 
   'use strict';
 
+  /**
+   * The MouseHandler constructor
+   *
+   * NOTE: Don't call new MouseHandler() directly, instead pass the constructor
+   * to the InputController's `registerDeviceHandler()` method.
+   *
+   * In general, you should not directly interact with an instance of a device
+   * handler, except for it's configurable options. For the MouseHandler, these
+   * are:
+   * <ul>
+   *   <li>infiniteXAxis</li>
+   *   <li>infiniteYAxis</li>
+   * </ul>
+   * @param {Object} bindings The bindings for this device
+   * @param {Object} input A reference to the input object
+   * @name MouseHandler
+   * @constructor
+   */
   var MouseHandler = function(bindings, input){
     this.bindings = bindings;
     this.input = input;
@@ -33,24 +51,90 @@ define(function(){
     this.onResize();
   };
 
-  MouseHandler.prototype = {
+  MouseHandler.prototype = /** @lends MouseHandler */ {
 
+    /**
+     * The name of the device to handle. This name must be unique to this
+     * handler and serves two purposes (see examples).
+     *
+     * @type {String}
+     * @example
+        // 1. The instance of this handler can be retrieved via this name from
+        // the input controller instance like this:
+        var mouseHandler = inputController.deviceHandlers.mouse;
+     * @example
+        // 2. In the bindings configurations all bindings for this device must
+        // have this name in the `device` property:
+        var bindings = {
+          steering: {
+            device: 'mouse',
+            inputId: 'x'
+          }
+        }
+     */
     name: 'mouse',
 
+    /**
+     * If the browser has support for the pointer lock API
+     *
+     * @type {Boolean}
+     */
     hasPointerLockSupport: false,
 
+    /**
+     * The name of the property that points to the pointer lock element
+     *
+     * @type {String}
+     */
     pointerLockElementProperty: null,
 
+    /**
+     * The name of the property that holds the movement data in mousemove events
+     * if pointer lock is enabled
+     *
+     * @type {String}
+     */
     movementProperty: '',
 
+    /**
+     * Whether the x axis should be treated as infinite. Defaults to false.
+     *
+     * Set this to true if you are using pointer lock and want to not restrict
+     * mouse movement to the borders of the computer screen.
+     *
+     * @type {Boolean}
+     */
     infiniteXAxis: false,
 
+    /**
+     * Whether the y axis should be treated as infinite. Defaults to false.
+     *
+     * Set this to true if you are using pointer lock and want to not restrict
+     * mouse movement to the borders of the computer screen.
+     *
+     * @type {Boolean}
+     */
     infiniteYAxis: false,
 
+    /**
+     * Stores the current window width
+     *
+     * @type {Number}
+     */
     width: 0,
 
+    /**
+     * Stores the current window height
+     *
+     * @type {Number}
+     */
     height: 0,
 
+    /**
+     * Handles mouse movement
+     *
+     * @param {MouseEvent} evt
+     */
     onMouseMove: function(evt){
       var x, y, mouseX, mouseY,
           width = this.width,
@@ -115,6 +199,11 @@ define(function(){
       }
     },
 
+    /**
+     * Handles mouse down events
+     *
+     * @param {MouseEvent} evt
+     */
     onMouseDown: function(evt){
       if(this.isDetecting){
         this._detectCallback({
@@ -132,6 +221,11 @@ define(function(){
       }
     },
 
+    /**
+     * Handles mouse up events
+     *
+     * @param {MouseEvent} evt
+     */
     onMouseUp: function(evt){
       if(this.isDetecting){
         return;
@@ -144,15 +238,31 @@ define(function(){
       }
     },
 
+    /**
+     * Updates window width and height on window resize
+     */
     onResize: function(){
       this.width = window.innerWidth;
       this.height = window.innerHeight;
     },
 
+    /**
+     * Clamps a value between a minimum and maximum value
+     *
+     * @param {Number} min The min value
+     * @param {Number} max The max value
+     * @param {Number} value The value to clamp
+     * @returns {number} The clamped number
+     */
     clamp: function (min, max, value){
       return Math.min(max, Math.max(min, value));
     },
 
+    /**
+     * Destroys all event listeners
+     *
+     * Called by the input controller's destroy() method.
+     */
     destroy: function(){
       document.removeEventListener('mousemove', this.moveListener, false);
       document.removeEventListener('mousedown', this.downListener, false);
