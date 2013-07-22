@@ -1,4 +1,4 @@
-/*global define:false, window: false, webkitSpeechRecognition:false */
+/*global define:false, window: false */
 define(function () {
 
   'use strict';
