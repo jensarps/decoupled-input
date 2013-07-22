@@ -71,6 +71,15 @@ module.exports = function (grunt) {
           UMDWrapper.after.join('\n')
         ]
       }
+    },
+
+    jsdoc: {
+      dist: {
+        src: ['src/*.js'],
+        options: {
+          destination: 'doc'
+        }
+      }
     }
 
   });
@@ -78,6 +87,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-closure-compiler');
   grunt.loadNpmTasks('grunt-wrap');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   var handlers = grunt.option('handlers') || ('mouse,keyboard,gamepad,speech');
   var isDebug = [true, '1', 'true', 'on'].indexOf(grunt.option('dev')) !== -1;
