@@ -34,7 +34,7 @@ define(function () {
       inputController,
       bindings
     ){
-      // inputController already is instantiated abd ready to work with
+      // inputController already is instantiated and ready to work with
       inputController.setBindings(bindings);
 
       // the input object is ready to use:
