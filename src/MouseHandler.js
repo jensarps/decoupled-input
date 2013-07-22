@@ -75,6 +75,13 @@ define(function(){
     name: 'mouse',
 
     /**
+     * The properties that are configurable for this handler
+     *
+     * @type {String[]}
+     */
+    configurableProperties: ['infiniteXAxis', 'infiniteYAxis'],
+
+    /**
      * If the browser has support for the pointer lock API
      *
      * @type {Boolean}
@@ -129,6 +136,21 @@ define(function(){
      * @type {Number}
      */
     height: 0,
+
+    /**
+     * Configures a configurable option
+     *
+     * @param {String} property The property name to configure
+     * @param {*} value The new value
+     * @returns {Boolean} true if configuration was successful
+     */
+    configure: function(property, value){
+      if (this.configurableProperties.indexOf(property) === -1) {
+        throw new Error('Property ' + property + ' is not configurable.');
+      }
+      this[property] = value;
+      return true;
+    },
 
     /**
      * Handles mouse movement
