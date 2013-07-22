@@ -1,24 +1,73 @@
 /*global define:false */
+
+/**
+ * @license decoupled-input - Cross-Device Unified Input Handling
+ * Copyright (c) 2012 - 2013 Jens Arps
+ * Version 1.0.0
+ *
+ * Licensed under the MIT (X11) license
+ */
+
 define(function () {
 
   'use strict';
 
+  /**
+   * The InputController constructor
+   *
+   * This controller supervises the different device handlers and is the
+   * interface to talk to.
+   *
+   * If you are using a built version of decoupled input, you'll get an
+   * already instantiated InputController that has the device handlers
+   * registered with.
+   *
+   * @constructor
+   * @name InputController
+   * @version 1.0.0
+   */
   var InputController = function () {
     this.deviceHandlers = {};
     this.bindings = {};
     this.input = {};
   };
 
-  InputController.prototype = {
+  InputController.prototype = /** @lends InputController */ {
 
-    bindings: null,
-
-    deviceHandlers: null,
-
-    input: null,
-
+    /**
+     * The version of InputController
+     *
+     * @type {String}
+     */
     version: '1.0.0',
 
+    /**
+     * The internal representation of the current binding configuration
+     *
+     * @type {Object}
+     */
+    bindings: null,
+
+    /**
+     * An object containing the registered device handlers
+     *
+     * @type {Object}
+     */
+    deviceHandlers: null,
+
+    /**
+     * The object containing the actual user input
+     *
+     * @type {Object}
+     */
+    input: null,
+
+    /**
+     * Sets a new binding configuration and updates registered device handlers
+     *
+     * @param {Object} bindings The new binding configuration
+     * @returns {void}
+     */
     setBindings: function(bindings){
       this._processBindings(bindings);
 
@@ -28,6 +77,13 @@ define(function () {
       }, this);
     },
 
+    /**
+     * Parses the binding configuration and prepares the input object
+     *
+     * @param {Object} bindings The binding configuration
+     * @returns {void}
+     * @private
+     */
     _processBindings: function (bindings) {
       var toString = {}.toString;
 
@@ -50,6 +106,15 @@ define(function () {
       }, this);
     },
 
+    /**
+     * Normalizes a single binding setup and adds it to the internal binding
+     * representation
+     *
+     * @param {Object} binding A single binding setup
+     * @param {String} description The string identifier of this binding
+     * @returns {void}
+     * @private
+     */
     _applyBinding: function (binding, description) {
       if (!this.bindings[binding.device]) {
         this.bindings[binding.device] = {};
@@ -62,15 +127,32 @@ define(function () {
       };
     },
 
+    /**
+     * Registers a device handler
+     *
+     * @param {Function} DeviceHandler The device handler class to register
+     * @returns {void}
+     */
     registerDeviceHandler: function (DeviceHandler) {
       var name = DeviceHandler.prototype.name;
       this.deviceHandlers[name] = new DeviceHandler(this.bindings[name] || {}, this.input);
     },
 
+    /**
+     * Registers multiple device handlers
+     *
+     * @param {Array} deviceHandlers An array of device handler classes
+     * @returns {void}
+     */
     registerDeviceHandlers: function (deviceHandlers) {
       deviceHandlers.forEach(this.registerDeviceHandler, this);
     },
 
+    /**
+     * Destroys the InputController and all registered device handlers
+     *
+     * @returns {void}
+     */
     destroy: function () {
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         this.deviceHandlers[deviceName].destroy();
@@ -79,6 +161,14 @@ define(function () {
     },
 
     /* detection methods */
+
+    /**
+     * Starts a detecting session
+     *
+     * @param {Function} callback A callback to be called when user input was
+     *  detected
+     * @returns {void}
+     */
     startDetecting: function (callback) {
       var detectCallback = function (evt) {
         evt.timestamp = Date.now();
@@ -92,6 +182,11 @@ define(function () {
       }, this);
     },
 
+    /**
+     * Stops a detecting session
+     *
+     * @returns {void}
+     */
     stopDetecting: function(){
       Object.keys(this.deviceHandlers).forEach(function (deviceName) {
         var deviceHandler = this.deviceHandlers[deviceName];
