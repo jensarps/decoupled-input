@@ -25,6 +25,54 @@ define(function () {
    * @constructor
    * @name InputController
    * @version 1.0.0
+   * @example
+    // working with a built version (default scenario):
+    require([
+      'input-controller',
+      'my-bindings'
+    ], function(
+      inputController,
+      bindings
+    ){
+      // inputController already is instantiated abd ready to work with
+      inputController.setBindings(bindings);
+
+      // the input object is ready to use:
+      var userInput = inputController.input;
+    });
+   * @example
+    // using a custom setup:
+    require([
+      // the controller itself:
+      '../src/InputController',
+      // the device handlers:
+      '../src/MouseHandler',
+      '../src/KeyboardHandler',
+      '../src/GamepadHandler',
+      // and the bindings file:
+      'my-bindings'
+    ], function(
+      InputController,
+      MouseHandler,
+      Keyboardhandler,
+      GamepadHandler,
+      bindings
+    ){
+      // Start input controller
+      var inputController = new InputController();
+
+      // register handlers
+      inputController.registerDeviceHandlers([MouseHandler, Keyboardhandler, GamepadHandler]);
+
+      // set options
+      inputController.configureDeviceHandler('mouse', 'invertYAxis', true);
+
+      // set bindings
+      inputController.setBindings(bindings);
+
+      // this is where we can read input data from:
+      var input = inputController.input;
+    });
    */
   var InputController = function () {
     this.deviceHandlers = {};
