@@ -149,6 +149,21 @@ define(function () {
     },
 
     /**
+     * Retrieves the instance of a registered device handler. Use this if you
+     * need to configure a device handler.
+     *
+     * @param {String} name The name of the device / device handler
+     * @returns {*} The handler instance or undefined if no handler was
+     *  registered by the given name.
+     * @example
+        // obtain a reference to the mouse handler
+        var mouseHandler = inputController.getDeviceHandler('mouse);
+     */
+    getDeviceHandler: function (name) {
+      return this.deviceHandlers[name];
+    },
+
+    /**
      * Destroys the InputController and all registered device handlers
      *
      * @returns {void}
