@@ -160,7 +160,24 @@ define(function () {
         var mouseHandler = inputController.getDeviceHandler('mouse);
      */
     getDeviceHandler: function (name) {
-      return this.deviceHandlers[name];
+      var handler = this.deviceHandlers[name];
+      if (!handler) {
+        throw new Error('No handler with the name "' + name + '" registered.');
+      }
+      return handler;
+    },
+
+    /**
+     * Sets a property on a device handler
+     *
+     * @param {String} name The name of the handler to configure
+     * @param {String} property The property name to configure
+     * @param {*} value The new value for the property
+     * @returns {Boolean} true if the configuration was successful
+     */
+    configureDeviceHandler: function (name, property, value) {
+      var handler = this.getDeviceHandler(name);
+      return handler.configure(property, value);
     },
 
     /**

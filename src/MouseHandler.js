@@ -10,16 +10,32 @@ define(function(){
    * to the InputController's `registerDeviceHandler()` method.
    *
    * In general, you should not directly interact with an instance of a device
-   * handler, except for it's configurable options. For the MouseHandler, these
-   * are:
+   * handler. The input controller does everything that needs to be done.
+   *
+   * To configure a MouseHandler instance, use the inputController's
+   * `configureDeviceHandler();` method (see example).
+   *
+   * The MouseHandler's configurable properties are:
    * <ul>
    *   <li>infiniteXAxis</li>
    *   <li>infiniteYAxis</li>
    * </ul>
+   *
    * @param {Object} bindings The bindings for this device
    * @param {Object} input A reference to the input object
    * @name MouseHandler
    * @constructor
+   * @example
+      // register the mouse handler on an existing inputController instance
+      inputController.registerDeviceHandler(MouseHandler);
+
+      // obtain a reference to the handler
+      var mouseHandler = inputController.getDeviceHandler('mouse');
+
+      // configure the mouse handler
+      inputController.configureDeviceHandler('mouse', 'infiniteXAxis', true);
+      // or, using the reference from above:
+      mouseHandler.configure('infiniteXAxis', true);
    */
   var MouseHandler = function(bindings, input){
     this.bindings = bindings;
@@ -59,9 +75,9 @@ define(function(){
      *
      * @type {String}
      * @example
-        // 1. The instance of this handler can be retrieved via this name from
+        // 1. The instance of this handler can be accessed via this name from
         // the input controller instance like this:
-        var mouseHandler = inputController.deviceHandlers.mouse;
+        var mouseHandler = inputController.getDeviceHandler('mouse');
      * @example
         // 2. In the bindings configurations all bindings for this device must
         // have this name in the `device` property:
