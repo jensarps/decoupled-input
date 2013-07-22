@@ -57,11 +57,33 @@ define(function(){
     name: 'keyboard',
 
     /**
+     * The properties that are configurable for this handler
+     *
+     * @type {String[]}
+     */
+    configurableProperties: [],
+
+    /**
      * Whether the handler is in detecting mode
      *
      * @type {Boolean}
      */
     isDetecting: false,
+
+    /**
+     * Configures a configurable option
+     *
+     * @param {String} property The property name to configure
+     * @param {*} value The new value
+     * @returns {Boolean} true if configuration was successful
+     */
+    configure: function(property, value){
+      if (this.configurableProperties.indexOf(property) === -1) {
+        throw new Error('Property ' + property + ' is not configurable.');
+      }
+      this[property] = value;
+      return true;
+    },
 
     /**
      * Handles keydown events
