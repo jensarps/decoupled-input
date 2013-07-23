@@ -1,11 +1,13 @@
-(function (name, definition, global) {if (typeof define === 'function') {define(definition);} else if (typeof module !== 'undefined' && module.exports) {module.exports = definition();} else {global[name] = definition();}})('inputController', function () {'use strict';/*
- decoupled-input - Cross-Device Unified Input Handling
- Copyright (c) 2012 - 2013 Jens Arps
- Version 1.0.0
-
- Licensed under the MIT (X11) license
-*/
-var module$src$InputController={},InputController$$module$src$InputController=function(){this.deviceHandlers={};this.bindings={};this.input={}};
+/**
+ * decoupled-input - Cross-Device Unified Input Handling
+ * Version 1.0.0
+ * https://github.com/jensarps/decoupled-input
+ *
+ * Copyright (c) 2012 - 2013 Jens Arps
+ * http://jensarps.de/
+ * Licensed under the MIT (X11) license
+ */
+(function (name, definition, global) {if (typeof define === 'function') {define(definition);} else if (typeof module !== 'undefined' && module.exports) {module.exports = definition();} else {global[name] = definition();}})('inputController', function () {'use strict';var module$src$InputController={},InputController$$module$src$InputController=function(){this.deviceHandlers={};this.bindings={};this.input={}};
 InputController$$module$src$InputController.prototype={version:"1.0.0",bindings:null,deviceHandlers:null,input:null,setBindings:function(a){this._processBindings(a);Object.keys(this.deviceHandlers).forEach(function(a){this.deviceHandlers[a].bindings=this.bindings[a]||{};this.deviceHandlers[a].input=this.input},this)},_processBindings:function(a){var b={}.toString;Object.keys(a).forEach(function(c){var d=a[c],e="[object Array]"==b.call(d);this.input[c]=0;if(e)for(var e=0,f=d.length;e<f;e++)this._applyBinding(d[e],
 c);else this._applyBinding(d,c)},this)},_applyBinding:function(a,b){this.bindings[a.device]||(this.bindings[a.device]={});this.bindings[a.device][a.inputId]={description:b,down:!!a.down,up:!!a.up,invert:!!a.invert}},registerDeviceHandler:function(a){var b=a.prototype.name;this.deviceHandlers[b]=new a(this.bindings[b]||{},this.input)},registerDeviceHandlers:function(a){a.forEach(this.registerDeviceHandler,this)},getDeviceHandler:function(a){var b=this.deviceHandlers[a];if(!b)throw Error('No handler with the name "'+
 a+'" registered.');return b},configureDeviceHandler:function(a,b,c){return this.getDeviceHandler(a).configure(b,c)},destroy:function(){Object.keys(this.deviceHandlers).forEach(function(a){this.deviceHandlers[a].destroy()},this);this.deviceHandlers={}},startDetecting:function(a){var b=function(b){b.timestamp=Date.now();a(b)};Object.keys(this.deviceHandlers).forEach(function(a){a=this.deviceHandlers[a];a._detectCallback=b;a.isDetecting=!0},this)},stopDetecting:function(){Object.keys(this.deviceHandlers).forEach(function(a){a=
