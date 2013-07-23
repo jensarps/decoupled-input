@@ -3,6 +3,8 @@ module.exports = function (grunt) {
 
   'use strict';
 
+  var pkg = grunt.file.readJSON('package.json');
+
   var UMDWrapper = {
     /*jshint indent: false */
     before: [
@@ -25,7 +27,7 @@ module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig({
 
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: pkg,
 
     jshint: {
       all: ['Gruntfile.js', 'src/*'],
