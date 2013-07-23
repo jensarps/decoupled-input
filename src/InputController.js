@@ -244,7 +244,17 @@ define(function () {
      * Starts a detecting session
      *
      * @param {Function} callback A callback to be called when user input was
-     *  detected
+     *  detected. The callback will receive a data object as first and only
+     *  argument:
+     * @param {Object} callback.data An object containing information about the
+     *  user input
+     * @param {String} callback.data.device The device the input came from
+     * @param {String|Number} callback.data.inputId The inputId as you'd put it
+     *  in the binding configuration
+     * @param {Boolean} callback.data.isAxis Whether the current input serves
+     *  analog input
+     * @param {String} callback.data.timestamp The timestamp when the input was
+     *  recorded
      * @returns {void}
      */
     startDetecting: function (callback) {
