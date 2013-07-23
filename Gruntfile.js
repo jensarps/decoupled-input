@@ -8,14 +8,14 @@ module.exports = function (grunt) {
   var UMDWrapper = {
     before: [
       '(function (name, definition, global) {',
-      'if (typeof define === \'function\') {',
+      'if (typeof define === "function") {',
       'define(definition);',
-      '} else if (typeof module !== \'undefined\' && module.exports) {',
+      '} else if (typeof module !== "undefined" && module.exports) {',
       'module.exports = definition();',
       '} else {',
       'global[name] = definition();',
       '}',
-      '})(\'inputController\', function () {'
+      '})("inputController", function () {'
     ],
     after: [
       'return module$build$bundle; ',
