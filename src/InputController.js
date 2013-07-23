@@ -3,7 +3,6 @@
 /**
  * decoupled-input - Cross-Device Unified Input Handling
  * Copyright (c) 2012 - 2013 Jens Arps
- * Version 1.0.0
  *
  * Licensed under the MIT (X11) license
  */
