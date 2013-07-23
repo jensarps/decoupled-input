@@ -23,6 +23,18 @@ module.exports = function (grunt) {
     ]
   };
 
+  var licenseBlock = [
+    '/**',
+    ' * decoupled-input - Cross-Device Unified Input Handling',
+    ' * Version ' + pkg.version,
+    ' * https://github.com/jensarps/decoupled-input',
+    ' *',
+    ' * Copyright (c) 2012 - 2013 Jens Arps',
+    ' * http://jensarps.de/',
+    ' * Licensed under the MIT (X11) license',
+    ' */'
+  ].join('\n') + '\n';
+
   // Project configuration.
   grunt.initConfig({
 
@@ -59,7 +71,7 @@ module.exports = function (grunt) {
         src: ['build/input-controller.js'],
         dest: './',
         wrapper: [
-          UMDWrapper.before.join(''),
+          licenseBlock + UMDWrapper.before.join(''),
           UMDWrapper.after.join('')
         ]
       },
@@ -68,7 +80,7 @@ module.exports = function (grunt) {
         src: ['build/input-controller.dev.js'],
         dest: './',
         wrapper: [
-          UMDWrapper.before.join('\n'),
+          licenseBlock + UMDWrapper.before.join('\n'),
           UMDWrapper.after.join('\n')
         ]
       }
