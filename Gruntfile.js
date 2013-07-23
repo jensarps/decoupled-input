@@ -6,7 +6,6 @@ module.exports = function (grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
   var UMDWrapper = {
-    /*jshint indent: false */
     before: [
       '(function (name, definition, global) {',
       'if (typeof define === \'function\') {',
