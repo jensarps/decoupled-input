@@ -4,7 +4,7 @@ define(function () {
   'use strict';
 
   /**
-   * The SpeechHandler constructor, leveraging the Web SPeech API
+   * The SpeechHandler constructor, leveraging the Web Speech API
    *
    * NOTE: Don't call new SpeechHandler() directly, instead pass the constructor
    * to the InputController's `registerDeviceHandler()` method.
@@ -88,7 +88,7 @@ define(function () {
         // have this name in the `device` property:
         var bindings = {
           stop: {
-            device: SPEECH,
+            device: 'speech',
             inputId: 'stop'
           }
         }
