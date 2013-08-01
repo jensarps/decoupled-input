@@ -79,6 +79,13 @@ define(function () {
     name: 'gamepad',
 
     /**
+     * The properties that are configurable for this handler
+     *
+     * @type {String[]}
+     */
+    configurableProperties: ['deadzone'],
+
+    /**
      * The deadzone of the gamepad, i.e. the value that an axis' movement must
      * be larger than to be reported by the handler. Defaults to 0.01
      *
@@ -127,6 +134,21 @@ define(function () {
      * @type {Array}
      */
     prevTimestamps: null,
+
+    /**
+     * Configures a configurable option
+     *
+     * @param {String} property The property name to configure
+     * @param {*} value The new value
+     * @returns {Boolean} true if configuration was successful
+     */
+    configure: function(property, value){
+      if (this.configurableProperties.indexOf(property) === -1) {
+        throw new Error('Property ' + property + ' is not configurable.');
+      }
+      this[property] = value;
+      return true;
+    },
 
     /**
      * Initializes the handler
