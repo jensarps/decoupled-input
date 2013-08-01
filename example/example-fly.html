@@ -77,7 +77,7 @@
                 inputController.registerDeviceHandlers([MouseHandler, Keyboardhandler, GamepadHandler]);
 
                 // set options
-                inputController.deviceHandlers.mouse.invertYAxis = true;
+                inputController.configureDeviceHandler('mouse', 'invertYAxis', true);
 
                 // set bindings
                 inputController.setBindings(bindings);

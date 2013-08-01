@@ -124,7 +124,7 @@
       /* Input */
       inputController.setBindings(bindings);
 
-      inputController.deviceHandlers.mouse.infiniteXAxis = true;
+      inputController.configureDeviceHandler('mouse', 'infiniteXAxis', true);
 
       // this is where we can read input data from:
       input = inputController.input;

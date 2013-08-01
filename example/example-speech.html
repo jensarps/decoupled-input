@@ -115,7 +115,7 @@
         /* Input */
         inputController.setBindings(bindings);
 
-        speechHandler = inputController.deviceHandlers.speech;
+        speechHandler = inputController.getDeviceHandler('speech');
         speechHandler.onRecognitionEnded = function(){
           speechActive = false;
         };
