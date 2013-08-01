@@ -5,13 +5,13 @@ define(function(){
 
   /**
    * The KeyboardHandler constructor
-   *
+   * <br><br>
    * NOTE: Don't call new KeyboardHandler() directly, instead pass the constructor
    * to the InputController's `registerDeviceHandler()` method.
-   *
+   * <br><br>
    * In general, you should not directly interact with an instance of a device
    * handler. The input controller does everything that needs to be done.
-   *
+   * <br><br>
    * The KeyboardHandler has no configurable options.
    *
    * @param {Object} bindings The bindings for this device

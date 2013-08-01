@@ -5,13 +5,13 @@ define(function(){
 
   /**
    * The MouseHandler constructor
-   *
+   * <br><br>
    * NOTE: Don't call new MouseHandler() directly, instead pass the constructor
    * to the InputController's `registerDeviceHandler()` method.
-   *
+   * <br><br>
    * In general, you should not directly interact with an instance of a device
    * handler. The input controller does everything that needs to be done.
-   *
+   * <br><br>
    * To configure a MouseHandler instance, use the inputController's
    * `configureDeviceHandler();` method (see example).
    *

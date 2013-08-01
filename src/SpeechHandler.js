@@ -5,15 +5,15 @@ define(function () {
 
   /**
    * The SpeechHandler constructor, leveraging the Web Speech API
-   *
+   * <br><br>
    * NOTE: Don't call new SpeechHandler() directly, instead pass the constructor
    * to the InputController's `registerDeviceHandler()` method.
-   *
+   * <br><br>
    * In general, you should not directly interact with an instance of a device
    * handler. The input controller does everything that needs to be done.
    * There's two exceptions for this: You must call the handler's `start()`
    * and `stop()` methods to begin or end recognition (see example).
-   *
+   * <br><br>
    * To configure a SpeechHandler instance, use the inputController's
    * `configureDeviceHandler();` method (see example).
    *
