@@ -22,7 +22,7 @@ define(function () {
    *
    * The GamepadHandler's configurable properties are:
    * <ul>
-   *   <li>deadzone</li>
+   *   <li>deadzone (defaults to 0.01)</li>
    * </ul>
    *
    * @see https://dvcs.w3.org/hg/gamepad/raw-file/default/gamepad.html

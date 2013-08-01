@@ -17,8 +17,8 @@ define(function(){
    *
    * The MouseHandler's configurable properties are:
    * <ul>
-   *   <li>infiniteXAxis</li>
-   *   <li>infiniteYAxis</li>
+   *   <li>infiniteXAxis (defaults to false)</li>
+   *   <li>infiniteYAxis (defaults to false)</li>
    * </ul>
    *
    * @param {Object} bindings The bindings for this device

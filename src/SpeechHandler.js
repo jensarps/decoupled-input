@@ -19,9 +19,9 @@ define(function () {
    *
    * The SpeechHandler's configurable properties are:
    * <ul>
-   *   <li>language</li>
-   *   <li>requiredConfidence</li>
-   *   <li>onRecognitionEnded</li>
+   *   <li>language (defaults to 'en-US')</li>
+   *   <li>requiredConfidence (defaults to 0.5)</li>
+   *   <li>onRecognitionEnded (defaults tu null)</li>
    * </ul>
    *
    * @see https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html
