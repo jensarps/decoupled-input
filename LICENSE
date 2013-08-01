@@ -18,9 +18,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+================================================================================
 
-Gamepad polling code in Gamepad.js taken from this fantastic article:
+Gamepad polling code in src/GamepadHandler.js taken from this fantastic article:
 
  http://www.html5rocks.com/en/tutorials/doodles/gamepad/
 
 and probably by Marcin Wichary.
+
+================================================================================
+
+This repository contains the following external libraries (each with their own
+license):
+
+  - Closure Compiler:
+  	http://code.google.com/p/closure-compiler/source/browse/trunk/COPYING

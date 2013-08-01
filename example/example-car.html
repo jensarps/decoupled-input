@@ -63,19 +63,12 @@
     </div>
     <script type="text/javascript">
 
-        // require controller files...
         require([
-            // the controller itself:
-            '../src/InputController',
-            // the device handlers:
-            '../src/MouseHandler',
-            '../src/KeyboardHandler',
+            '../build/input-controller',
             // and the bindings file:
             'bindings-car'
         ], function(
-            InputController,
-            MouseHandler,
-            Keyboardhandler,
+            inputController,
             bindings
         ){
 
@@ -97,9 +90,7 @@
             function init () {
 
                 /* Input */
-                var inputController = new InputController(bindings);
-                inputController.registerDeviceHandler(MouseHandler, 'mouse');
-                inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
+                inputController.setBindings(bindings);
 
                 // this is where we can read input data from:
                 input = inputController.input;

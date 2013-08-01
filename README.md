@@ -31,6 +31,7 @@ var inputController = new InputController(bindings);
 inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
 inputController.registerDeviceHandler(MouseHandler, 'mouse');
 inputController.registerDeviceHandler(KeyboardHandler, 'keyboard');
+inputController.registerDeviceHandler(SpeechHandler, 'speech');
 
 var input = inputController.input; // this is where all input is stored
 
@@ -119,7 +120,7 @@ The FPS example uses multiple assignments.
 
 ##Updating the binding configuration
 
-To update the binding configuration during runtime, just call the controller's `updateBindings()` method with the new bindings:
+To update the binding configuration during runtime, just call the controller's `setBindings()` method with the new bindings:
 
 ~~~javascript
 
@@ -127,7 +128,7 @@ To update the binding configuration during runtime, just call the controller's `
 bindings.pitch.invert = false;
 
 // now update the controller
-inputController.updateBindings(bindings);
+inputController.setBindings(bindings);
 
 ~~~
 
@@ -212,6 +213,19 @@ By default, both are set to false. The infinite[X/Y]Axis properties will change 
 
 The First Person style example uses infiniteXAxis.
 
+##SpeechHandler
+
+The speech device handler has two configurable options that can be changed anytime (i.e. also during runtime):
+
+* lang
+* requiredConfidence
+
+`lang` defaults to `'en_US`' and denotes the speech recognition language. `requiredConfidence` defaults to `0.5` and denotes the minimum recognition confidence that will handle the transcript as a match.
+
+The speech handler also has two methods, `start` and `stop` to control when recognition happens. As the recognition may end without having called `stop`, you can assign an event handler to the `onRecognitionEnded` property, which will be called when the API has stopped recognizing.
+
+The Car style example /w speech bindings uses speech input.
+
 
 #Examples
 
@@ -222,6 +236,7 @@ _Note that these examples are just meant to demonstrate how to work with binding
 * [First-Person style](http://jensarps.github.com/decoupled-input/example/example-first-person.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-first-person.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fps.js) -- This example uses `infiniteXAxis`
 * [Car style](http://jensarps.github.com/decoupled-input/example/example-car.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-car.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-car.js)
 * [Fly style](http://jensarps.github.com/decoupled-input/example/example-fly.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-fly.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-fly.js) -- This example uses `invert: true` for it's y-axis and has gamepad bindings.
+* [Car style w/ speech bindings](http://jensarps.github.com/decoupled-input/example/example-speech.html) | [code](https://github.com/jensarps/decoupled-input/blob/master/example/example-speech.html) | [bindings](https://github.com/jensarps/decoupled-input/blob/master/example/bindings-car.js) -- This example is like the car style example but has speech bindings.
 
 
 ## PointerLock / infinite[X/Y]Axis
@@ -271,6 +286,10 @@ The reason for this is simple as well: when a user presses a button -- no matter
 ##Gamepad support
 
 The Gamepad API still is highly experimental. However, the fly example uses gamepad bindings and works fine with my setup: An Xbox 360 wired controller on Mac OSX Lion. Axis and button mappings are probably different for other controllers. If you encounter any issues with your gamepad, or have any observations or insights to share, don't hesitate to file a bug in the issue tracker.
+
+##Web Speech API
+
+The speech handler uses the Web Speech API, which is currently only supported in Chrome 25+, and is to be considered experimental.
 
 ##Dependecies
 

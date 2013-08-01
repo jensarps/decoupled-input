@@ -1,0 +1,38 @@
+{
+  "name": "decoupled-input",
+  "version": "1.0.0",
+  "description": "Multi-Device Input Handling",
+  "keywords": [
+    "input",
+    "gamepad",
+    "html5",
+    "controls"
+  ],
+  "author": "jensarps <mail@jensarps.de> (http://jensarps.de/)",
+  "homepage": "https://github.com/jensarps/decoupled-input",
+  "directories": {
+    "example": "example"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/jensarps/decoupled-input/raw/master/LICENSE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jensarps/decoupled-input.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jensarps/decoupled-input/issues"
+  },
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "requirejs": "~2.1.8",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-closure-compiler": "0.0.18",
+    "grunt-wrap": "~0.2.0",
+    "grunt-jsdoc": "~0.4.0"
+  }
+}

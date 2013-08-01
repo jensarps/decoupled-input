@@ -69,12 +69,18 @@
             function init () {
 
                 /* Input */
-                var inputController = new InputController(bindings);
-                inputController.registerDeviceHandler(MouseHandler, 'mouse');
-                inputController.registerDeviceHandler(Keyboardhandler, 'keyboard');
-                inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
 
-                inputController.deviceHandlers.mouse.invertYAxis = true;
+                // Start input controller
+                var inputController = new InputController();
+
+                // register handlers
+                inputController.registerDeviceHandlers([MouseHandler, Keyboardhandler, GamepadHandler]);
+
+                // set options
+                inputController.configureDeviceHandler('mouse', 'invertYAxis', true);
+
+                // set bindings
+                inputController.setBindings(bindings);
 
                 // this is where we can read input data from:
                 input = inputController.input;
