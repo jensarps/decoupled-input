@@ -1,14 +1,47 @@
 /*global define:false, window:false, navigator:false */
+/**
+ * Gamepad polling code taken from this fantastic article by Marcin Wichary:
+ *
+ * http://www.html5rocks.com/en/tutorials/doodles/gamepad/
+ */
 define(function () {
 
   'use strict';
 
   /**
-   * Gamepad polling code taken from this fantastic article by Marcin Wichary:
+   * The GamepadHandler constructor, leveraging the Gamepad API
    *
-   * http://www.html5rocks.com/en/tutorials/doodles/gamepad/
-   */
+   * NOTE: Don't call new GamepadHandler() directly, instead pass the constructor
+   * to the InputController's `registerDeviceHandler()` method.
+   *
+   * In general, you should not directly interact with an instance of a device
+   * handler. The input controller does everything that needs to be done.
+   *
+   * To configure a GamepadHandler instance, use the inputController's
+   * `configureDeviceHandler();` method (see example).
+   *
+   * The GamepadHandler's configurable properties are:
+   * <ul>
+   *   <li>deadzone</li>
+   * </ul>
+   *
+   * @see https://dvcs.w3.org/hg/gamepad/raw-file/default/gamepad.html
+   * @param {Object} bindings The bindings for this device
+   * @param {Object} input A reference to the input object
+   * @name GamepadHandler
+   * @constructor
+   * @example
+      // register the gamepad handler on an existing inputController instance
+      inputController.registerDeviceHandler(GamepadHandler);
 
+      // obtain a reference to the handler
+      var gamepadHandler = inputController.getDeviceHandler('gamepad');
+
+      // configure the speech handler
+      inputController.configureDeviceHandler('gamepad', 'deadzone', 0.01);
+      // or, using the reference from above:
+      gamepadHandler.configure('deadzone', 0.01);
+   */
   var GamepadHandler = function (bindings, input) {
     this.bindings = bindings;
     this.input = input;
@@ -22,24 +55,82 @@ define(function () {
     this.init();
   };
 
-  GamepadHandler.prototype = {
-
+  GamepadHandler.prototype = /** @lends GamepadHandler */ {
+    /**
+     * The name of the device to handle. This name must be unique to this
+     * handler and serves two purposes (see examples).
+     *
+     * @type {String}
+     * @example
+        // 1. The instance of this handler can be accessed via this name from
+        // the input controller instance like this:
+        var gamepadHandler = inputController.getDeviceHandler('gamepad');
+        inputController.configureDeviceHandler('gamepad', 'deadzone', 0.01);
+     * @example
+        // 2. In the bindings configurations all bindings for this device must
+        // have this name in the `device` property:
+        var bindings = {
+          pitch: {
+            device: 'gamepad',
+            inputId: 'axis-1'
+          }
+        }
+     */
     name: 'gamepad',
 
+    /**
+     * The deadzone of the gamepad, i.e. the value that an axis' movement must
+     * be larger than to be reported by the handler. Defaults to 0.01
+     *
+     * @type {Number}
+     */
     deadzone: 0.01,
 
+    /**
+     * A collection of button states
+     *
+     * @type {Array}
+     */
     buttonStates: null,
 
+    /**
+     * A collection of axis values
+     *
+     * @type {Array}
+     */
     axisValues: null,
 
+    /**
+     * A collection of connected gamepads
+     *
+     * @type {Array}
+     */
     gamepads: null,
 
+    /**
+     * Whether polling of gamepads is currently active
+     *
+     * @type {Boolean}
+     */
     isPolling: false,
 
+    /**
+     * A collection of the types of connected gamepads
+     *
+     * @type {Array}
+     */
     prevRawGamepadTypes: null,
 
+    /**
+     * A collection of timestamps used during polling
+     *
+     * @type {Array}
+     */
     prevTimestamps: null,
 
+    /**
+     * Initializes the handler
+     */
     init: function () {
 
       var isAvailable = !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1);
@@ -53,11 +144,21 @@ define(function () {
       }
     },
 
+    /**
+     * Called when a gamepad is connected
+     *
+     * @param {Event} evt The event containing data about the connected gamepad
+     */
     onGamepadConnect: function (evt) {
       this.gamepads.push(evt.gamepad);
       this.startPolling();
     },
 
+    /**
+     * Called when gamepad gets disconnected
+     *
+     * @param {Event} evt The disconnect event
+     */
     onGamepadDisconnect: function (evt) {
       for (var i = this.gamepads - 1; i >= 0; i--) {
         if (this.gamepads[i].index == evt.gamepad.index) {
@@ -70,6 +171,9 @@ define(function () {
       }
     },
 
+    /**
+     * Starts polling connected gamepads for changes
+     */
     startPolling: function () {
       if (!this.isPolling) {
         this.isPolling = true;
@@ -77,10 +181,16 @@ define(function () {
       }
     },
 
+    /**
+     * Stops polling connected gamepads
+     */
     stopPolling: function () {
       this.isPolling = false;
     },
 
+    /**
+     * The polling loop
+     */
     tick: function () {
       if (this.isPolling) {
         var tick = this.tick.bind(this);
@@ -96,6 +206,9 @@ define(function () {
       this.pollStatus();
     },
 
+    /**
+     * Checks for updates in gamepad states
+     */
     pollStatus: function () {
       this.pollGamepads();
       for (var i = 0, m = this.gamepads.length; i<m; i++) {
@@ -108,6 +221,9 @@ define(function () {
       }
     },
 
+    /**
+     * Reads the button and axis state of connected gamepads
+     */
     pollGamepads: function () {
       var rawGamepads = (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
       var i,m;
@@ -147,6 +263,11 @@ define(function () {
       }
     },
 
+    /**
+     * Called when a change in a gamepad's state is detected
+     *
+     * @param {Number} gamepadId The id of the gamepad that had a change
+     */
     onStatusChanged: function (gamepadId) {
 
       var gamepad = this.gamepads[gamepadId];
@@ -211,7 +332,11 @@ define(function () {
       }
     },
 
+    /**
+     * Destroys all event listeners
+     */
     destroy: function(){
+      this.stopPolling();
       window.removeEventListener('MozGamepadConnected', this.connectListener, false);
       window.removeEventListener('MozGamepadDisconnected', this.disconnectListener, false);
     }
