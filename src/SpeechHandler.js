@@ -26,6 +26,8 @@ define(function () {
 
     name: 'speech',
 
+    configurableProperties: ['language', 'requiredConfidence', 'onRecognitionEnded'],
+
     recognition: null,
 
     isRecognizing: false,
@@ -37,6 +39,21 @@ define(function () {
     requiredConfidence: 0.5,
 
     onRecognitionEnded: null,
+
+    /**
+     * Configures a configurable option
+     *
+     * @param {String} property The property name to configure
+     * @param {*} value The new value
+     * @returns {Boolean} true if configuration was successful
+     */
+    configure: function(property, value){
+      if (this.configurableProperties.indexOf(property) === -1) {
+        throw new Error('Property ' + property + ' is not configurable.');
+      }
+      this[property] = value;
+      return true;
+    },
 
     _startHandler: function () {
       this.isRecognizing = true;
