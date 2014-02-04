@@ -100,11 +100,18 @@ define(function(){
         });
         return;
       }
+      var char = String.fromCharCode(evt.keyCode),
+          charLower = char.toLowerCase(),
+          binding;
       if(evt.keyCode in this.bindings){
-        var binding = this.bindings[evt.keyCode];
-        if(binding.down){
-          this.input[binding.description] = 1;
-        }
+        binding = this.bindings[evt.keyCode];
+      } else if(char in this.bindings){
+        binding = this.bindings[char];
+      } else if (charLower in this.bindings){
+        binding = this.bindings[charLower];
+      }
+      if(binding && binding.down){
+        this.input[binding.description] = 1;
       }
     },
 
@@ -118,11 +125,19 @@ define(function(){
       if(this.isDetecting){
         return;
       }
+      var char = String.fromCharCode(evt.keyCode),
+          charLower = char.toLowerCase(),
+          binding;
       if(evt.keyCode in this.bindings){
-        var binding = this.bindings[evt.keyCode];
-        if(binding.up){
-          this.input[binding.description] = 0;
-        }
+        binding = this.bindings[evt.keyCode];
+      } else if(char in this.bindings){
+        binding = this.bindings[char];
+      } else if (charLower in this.bindings){
+        binding = this.bindings[charLower];
+      }
+
+      if(binding && binding.up){
+        this.input[binding.description] = 0;
       }
     },
 

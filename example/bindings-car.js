@@ -2,64 +2,60 @@ define(function(){
 
   /* This is an example bindings file */
 
-  var KEYBOARD = 'keyboard',
-      MOUSE = 'mouse',
-      SPEECH = 'speech';
-
   var bindings = {
 
     accelerate: {
-      device: KEYBOARD,
-      inputId: 87, // w
+      device: 'keyboard',
+      inputId: 'w',
       down: true,
       up: true
     },
 
     brake: {
-      device: KEYBOARD,
-      inputId: 83, // s
+      device: 'keyboard',
+      inputId: 's',
       down: true,
       up: true
     },
 
     steering: {
-      device: MOUSE,
+      device: 'mouse',
       inputId: 'x'
     },
 
     boost: {
-      device: MOUSE,
+      device: 'mouse',
       inputId: 0, // left button
       down: true,
       up: true
     },
 
     toggleSomething: {
-      device: KEYBOARD,
-      inputId: 84, // t
+      device: 'keyboard',
+      inputId: 't',
       down: true,
       up: false
     },
 
     toggleSpeechInput: {
-      device: KEYBOARD,
-      inputId: 86, // v
+      device: 'keyboard',
+      inputId: 'v',
       down: true,
       up: false
     },
 
     fullSpeed: {
-      device: SPEECH,
+      device: 'speech',
       inputId: 'full speed'
     },
 
     stop: {
-      device: SPEECH,
+      device: 'speech',
       inputId: 'stop'
     },
 
     slow: {
-      device: SPEECH,
+      device: 'speech',
       inputId: 'slow'
     }
   };
