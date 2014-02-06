@@ -251,6 +251,7 @@ define(function(){
         });
         return;
       }
+      // TODO: Allow 'left', 'middle' and 'right'
       if(evt.button in this.bindings){
         var binding = this.bindings[evt.button];
         if(binding.down){
