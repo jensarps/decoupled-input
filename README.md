@@ -21,19 +21,17 @@ _(For full example code and bindings please see the [Examples](#examples) sectio
 
 The decoupled-input modules come in AMD format. There two types of modules: a controller and device handlers. To work, there is also a binding configuration needed.
 
-If you're not into working with modules, you can grab the `input.js` file from the `build` directory and iclude it via a `<script>` tag. That file contains all needed modules and exposes them to global using the names found in the example below.
+For your convenience, the controller and device handlers are already built and bundled into one file, `hipe.js`. In this file, all device handlers are already registered and ready to go. You can find it in the `build` folder.
+
+You can require this file with an AMD or CommonJS compatible loader, or include it via `<script>` tag (in this case you'll have a `hipe` available in the global scope).
 
 An input setup looks like this:
 
 ~~~javascript
 
-var inputController = new InputController(bindings);
-inputController.registerDeviceHandler(GamepadHandler, 'gamepad');
-inputController.registerDeviceHandler(MouseHandler, 'mouse');
-inputController.registerDeviceHandler(KeyboardHandler, 'keyboard');
-inputController.registerDeviceHandler(SpeechHandler, 'speech');
+hipe.setBindings(bindings);
 
-var input = inputController.input; // this is where all input is stored
+var input = hipe.input; // this is where all input is stored
 
 // later:
 if(input.accelerate){
