@@ -15,7 +15,7 @@ module.exports = function (grunt) {
       '} else {',
       'global[name] = definition();',
       '}',
-      '})("inputController", function () {'
+      '})("hipe", function () {'
     ],
     after: [
       'return module$build$bundle; ',
