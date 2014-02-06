@@ -29,7 +29,7 @@ module.exports = function (grunt) {
     ' * Version ' + pkg.version,
     ' * https://github.com/jensarps/decoupled-input',
     ' *',
-    ' * Copyright (c) 2012 - 2013 Jens Arps',
+    ' * Copyright (c) 2012 - ' + new Date().getFullYear() + ' Jens Arps',
     ' * http://jensarps.de/',
     ' * Licensed under the MIT (X11) license',
     ' */'
@@ -63,26 +63,32 @@ module.exports = function (grunt) {
       }
     },
 
-    // this is configured later
-    'closure-compiler': {},
+    // bundle task is configured later
+    'closure-compiler': {
+      hipe: {
+        closurePath: 'lib/closure',
+        jsOutputFile: 'build/hipe.js',
+        js: 'build/input-controller.js',
+        maxBuffer: 500,
+        options: {
+          //'language_in': 'ECMASCRIPT5_STRICT'
+        }
+      }
+    },
 
+    // 'src' property is configured later
     wrap: {
-      'all': {
-        src: ['build/input-controller.js'],
+      'umd': {
         dest: './',
         wrapper: [
-          licenseBlock + UMDWrapper.before.join(''),
+          UMDWrapper.before.join(''),
           UMDWrapper.after.join('')
         ]
       },
 
-      'debug': {
-        src: ['build/input-controller.dev.js'],
+      'license': {
         dest: './',
-        wrapper: [
-          licenseBlock + UMDWrapper.before.join('\n'),
-          UMDWrapper.after.join('\n')
-        ]
+        wrapper: [licenseBlock, '']
       }
     },
 
@@ -179,9 +185,11 @@ module.exports = function (grunt) {
       closureOptions.formatting = 'PRETTY_PRINT';
     }
 
+    var targetFileName = 'build/input-controller' + (isDebug ? '.dev' : '') + '.js';
+
     grunt.config.set('closure-compiler.bundle', {
       closurePath: 'lib/closure',
-      jsOutputFile: 'build/input-controller' + (isDebug ? '.dev' : '') + '.js',
+      jsOutputFile: targetFileName,
       js: closureFiles,
       maxBuffer: 500,
       options: closureOptions
@@ -189,7 +197,18 @@ module.exports = function (grunt) {
     grunt.task.run('closure-compiler:bundle');
 
     // wrap it up
-    grunt.task.run('wrap:' + (isDebug ? 'debug' : 'all'));
+    grunt.config.set('wrap.umd.src', [targetFileName]);
+    grunt.task.run('wrap:umd');
+
+    if (!isDebug) {
+      // second run to get rid of lengthy var names
+      grunt.task.run('closure-compiler:hipe');
+      targetFileName = 'build/hipe.js';
+    }
+
+    // add license block
+    grunt.config.set('wrap.license.src', [targetFileName]);
+    grunt.task.run('wrap:license');
 
   });
 };
