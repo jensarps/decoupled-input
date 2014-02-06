@@ -104,8 +104,8 @@
   // require controller build and bindings...
   require([
     'bindings-fps',
-    '../build/input-controller.js'
-  ], function (bindings, inputController) {
+    '../build/hipe'
+  ], function (bindings, hipe) {
 
     var camera, scene, renderer;
     var SCREEN_HEIGHT = window.innerHeight;
@@ -122,12 +122,12 @@
     function init () {
 
       /* Input */
-      inputController.setBindings(bindings);
+      hipe.setBindings(bindings);
 
-      inputController.configureDeviceHandler('mouse', 'infiniteXAxis', true);
+      hipe.configureDeviceHandler('mouse', 'infiniteXAxis', true);
 
       // this is where we can read input data from:
-      input = inputController.input;
+      input = hipe.input;
 
 
       /* Scene & Camera */

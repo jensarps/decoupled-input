@@ -84,10 +84,10 @@
   <script type="text/javascript">
 
     require([
-      '../build/input-controller',
+      '../build/hipe',
       'bindings-car'
     ], function(
-      inputController,
+      hipe,
       bindings
     ){
 
@@ -113,15 +113,15 @@
       function init () {
 
         /* Input */
-        inputController.setBindings(bindings);
+        hipe.setBindings(bindings);
 
-        speechHandler = inputController.getDeviceHandler('speech');
+        speechHandler = hipe.getDeviceHandler('speech');
         speechHandler.onRecognitionEnded = function(){
           speechActive = false;
         };
 
         // this is where we can read input data from:
-        input = inputController.input;
+        input = hipe.input;
 
         /* Scene & Camera */
         scene = new THREE.Scene();
