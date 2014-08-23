@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HIPE -- Car Style Example</title>
+  <title>DIBox -- Car Style Example</title>
   <style>
     html, body {
       height: 100%;
@@ -58,7 +58,7 @@
 </head>
 <body>
 <div id="info">
-  HIPE -- Car Style Example<br>accel/brake: W/S | steering: mouse | boost: mouse button | toggle vis: T
+    DIBox -- Car Style Example<br>accel/brake: W/S | steering: mouse | boost: mouse button | toggle vis: T
 </div>
 <button
   onclick="document.documentElement.requestFullscreen();GameShim.supports.pointerLock && document.documentElement.requestPointerLock();">
@@ -73,11 +73,11 @@
 <script type="text/javascript">
 
   require([
-    // get HIPE:
-    '../build/hipe',
+    // get DIBox:
+    '../build/dibox',
     // and the bindings file:
     'bindings-car'
-  ], function (hipe, bindings) {
+  ], function (DIBox, bindings) {
 
     // setup some vars:
     var camera, scene, renderer;
@@ -89,8 +89,8 @@
 
     var visualisationNodes;
 
-    // tell HIPE about the bindings config
-    hipe.setBindings(bindings);
+    // tell DIBox about the bindings config
+    DIBox.setBindings(bindings);
 
     // setup the WebGL world:
     setupWorld();
@@ -104,21 +104,21 @@
 
       visualizeInput();
 
-      // read current user input state from HIPE's `input` object:
-      speed += (hipe.input.accelerate - hipe.input.brake) / 50;
+      // read current user input state from DIBox's `input` object:
+      speed += (DIBox.input.accelerate - DIBox.input.brake) / 50;
       speed = THREE.Math.clamp(speed, -0.5, 1);
 
-      if (hipe.input.boost) {
+      if (DIBox.input.boost) {
         speed *= 1.5;
       }
 
       camera.translateZ(-speed);
 
-      camera.rotation.y += hipe.input.steering / 100 * speed;
+      camera.rotation.y += DIBox.input.steering / 100 * speed;
 
-      if (hipe.input.toggleSomething) {
+      if (DIBox.input.toggleSomething) {
         visualisationNodes.wrapper.classList.toggle('hidden');
-        hipe.input.toggleSomething = false;
+        DIBox.input.toggleSomething = false;
       }
 
       renderer.render(scene, camera);
@@ -135,10 +135,10 @@
           boost: document.getElementById('boost')
         };
       }
-      visualisationNodes.steering.style.left = ( hipe.input.steering * -50 + 50 ) + 'px';
-      visualisationNodes.accelerate.className = hipe.input.accelerate ? 'input-active' : '';
-      visualisationNodes.brake.className = hipe.input.brake ? 'input-active' : '';
-      visualisationNodes.boost.className = hipe.input.boost ? 'input-active' : '';
+      visualisationNodes.steering.style.left = ( DIBox.input.steering * -50 + 50 ) + 'px';
+      visualisationNodes.accelerate.className = DIBox.input.accelerate ? 'input-active' : '';
+      visualisationNodes.brake.className = DIBox.input.brake ? 'input-active' : '';
+      visualisationNodes.boost.className = DIBox.input.boost ? 'input-active' : '';
     }
 
     function setupWorld () {

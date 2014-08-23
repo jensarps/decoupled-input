@@ -84,10 +84,10 @@
   <script type="text/javascript">
 
     require([
-      '../build/hipe',
+      '../build/dibox',
       'bindings-car'
     ], function(
-      hipe,
+      DIBox,
       bindings
     ){
 
@@ -113,15 +113,15 @@
       function init () {
 
         /* Input */
-        hipe.setBindings(bindings);
+        DIBox.setBindings(bindings);
 
-        speechHandler = hipe.getDeviceHandler('speech');
+        speechHandler = DIBox.getDeviceHandler('speech');
         speechHandler.onRecognitionEnded = function(){
           speechActive = false;
         };
 
         // this is where we can read input data from:
-        input = hipe.input;
+        input = DIBox.input;
 
         /* Scene & Camera */
         scene = new THREE.Scene();

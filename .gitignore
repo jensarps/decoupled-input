@@ -1,3 +1,5 @@
 build/*.txt
 build/bundle.js
+build/input-controller.js
+build/input-controller.js.report.txt
 doc

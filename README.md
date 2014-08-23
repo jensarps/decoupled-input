@@ -12,7 +12,7 @@ Other benefits are:
 * Easy setup of multiple bindings for one action
 * Gamepad support!
 
-decoupled-input comes with handlers for mouse, keyboard and gamepad.
+decoupled-input comes with handlers for mouse, keyboard, gamepad and speech.
 
 
 #How It Works
@@ -21,17 +21,17 @@ _(For full example code and bindings please see the [Examples](#examples) sectio
 
 The decoupled-input modules come in AMD format. There two types of modules: a controller and device handlers. To work, there is also a binding configuration needed.
 
-For your convenience, the controller and device handlers are already built and bundled into one file, `hipe.js`. In this file, all device handlers are already registered and ready to go. You can find it in the `build` folder.
+For your convenience, the controller and device handlers are already built and bundled into one file, `dibox.js`. In this file, all device handlers are already registered and ready to go. You can find it in the `build` folder.
 
-You can require this file with an AMD or CommonJS compatible loader, or include it via `<script>` tag (in this case you'll have a `hipe` available in the global scope).
+You can require this file with an AMD or CommonJS compatible loader, or include it via `<script>` tag (in this case you'll have a `DIBox` variable available in the global scope).
 
 An input setup looks like this:
 
 ~~~javascript
 
-hipe.setBindings(bindings);
+DIBox.setBindings(bindings);
 
-var input = hipe.input; // this is where all input is stored
+var input = DIBox.input; // this is where all input is stored
 
 // later:
 if(input.accelerate){
@@ -52,7 +52,7 @@ var bindings = {
 
   forward: {
     device: 'keyboard', // the device name
-    inputId: 87, // the input id; for keyboards, the key code
+    inputId: 'w', // the input id; for keyboards, the character or the key code
     down: true, // if the controller should act on down state
     up: true // if the controller should act on up state
   },

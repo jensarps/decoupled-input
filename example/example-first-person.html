@@ -104,8 +104,8 @@
   // require controller build and bindings...
   require([
     'bindings-fps',
-    '../build/hipe'
-  ], function (bindings, hipe) {
+    '../build/dibox'
+  ], function (bindings, DIBox) {
 
     var camera, scene, renderer;
     var SCREEN_HEIGHT = window.innerHeight;
@@ -122,12 +122,12 @@
     function init () {
 
       /* Input */
-      hipe.setBindings(bindings);
+      DIBox.setBindings(bindings);
 
-      hipe.configureDeviceHandler('mouse', 'infiniteXAxis', true);
+      DIBox.configureDeviceHandler('mouse', 'infiniteXAxis', true);
 
       // this is where we can read input data from:
-      input = hipe.input;
+      input = DIBox.input;
 
 
       /* Scene & Camera */

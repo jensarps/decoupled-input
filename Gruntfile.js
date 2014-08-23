@@ -15,7 +15,7 @@ module.exports = function (grunt) {
       '} else {',
       'global[name] = definition();',
       '}',
-      '})("hipe", function () {'
+      '})("DIBox", function () {'
     ],
     after: [
       'return module$build$bundle; ',
@@ -65,9 +65,9 @@ module.exports = function (grunt) {
 
     // bundle task is configured later
     'closure-compiler': {
-      hipe: {
+      DIBox: {
         closurePath: 'lib/closure',
-        jsOutputFile: 'build/hipe.js',
+        jsOutputFile: 'build/dibox.js',
         js: 'build/input-controller.js',
         maxBuffer: 500,
         options: {
@@ -202,8 +202,8 @@ module.exports = function (grunt) {
 
     if (!isDebug) {
       // second run to get rid of lengthy var names
-      grunt.task.run('closure-compiler:hipe');
-      targetFileName = 'build/hipe.js';
+      grunt.task.run('closure-compiler:DIBox');
+      targetFileName = 'build/DIBox.js';
     }
 
     // add license block
